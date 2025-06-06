@@ -1,0 +1,151 @@
+﻿@model IEnumerable<SoleKingECommerce.ViewModels.Import.ImportListViewModel>
+@{
+    ViewData["Title"] = "Quản lý Nhập hàng";
+    Layout = "_AdminLayout";
+}
+
+<div class="page-header flex-row">
+    <form method="get" asp-action="Index" class="d-flex align-items-center w-75" style="gap: 1rem;">
+        <input type="text"
+               name="searchString"
+               value="@ViewData["CurrentFilter"]"
+               class="form-control"
+               placeholder="Tìm kiếm phiếu nhập..."
+               style="max-width: 300px;" />
+
+        <select name="supplierId" class="form-control" style="max-width: 250px;">
+            <option value="">-- Tất cả nhà cung cấp --</option>
+            @foreach (var supplier in ViewBag.Suppliers)
+            {
+                <option value="@supplier.Id" selected="@(ViewData["CurrentSupplierId"]?.ToString() == supplier.Id.ToString())">@supplier.Name</option>
+            }
+        </select>
+
+        <input type="date" name="fromDate" value="@ViewData["CurrentFromDate"]" class="form-control" style="max-width: 150px;" />
+        <input type="date" name="toDate" value="@ViewData["CurrentToDate"]" class="form-control" style="max-width: 150px;" />
+
+        <button type="submit" class="btn btn-outline-primary">
+            <i class="fas fa-search"></i> <span class="d-none d-md-inline text-nowrap">Tìm kiếm</span>
+        </button>
+    </form>
+    <a asp-action="Create" class="btn btn-primary">
+        <i class="fas fa-plus"></i> <span class="d-none d-md-inline">Nhập hàng</span>
+    </a>
+</div>
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+<div class="card">
+    <div class="card-body overflow-auto">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Mã phiếu</th>
+                    <th>Nhà cung cấp</th>
+                    <th class="text-end">Tổng tiền</th>
+                    <th class="text-center">Số lượng SP</th>
+                    <th>Ghi chú</th>
+                    <th>Người nhập</th>
+                    <th class="text-center">Ngày nhập</th>
+                    <th class="text-center">Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>#@item.Id.ToString("D5")</td>
+                        <td>@item.SupplierName</td>
+                        <td class="text-end fw-bold">@item.TotalPrice.ToString("N0")đ</td>
+                        <td class="text-center">@item.TotalItems</td>
+                        <td>@(item.Note?.Length > 30 ? item.Note.Substring(0, 30) + "..." : item.Note ?? "-")</td>
+                        <td>@item.UserName</td>
+                        <td class="text-center">@item.CreatedAt.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td class="text-center">
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            <button type="button" class="btn btn-sm btn-outline-danger delete-btn" data-id="@item.Id">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('.delete-btn').click(function (e) {
+                e.preventDefault();
+                var id = $(this).data('id');
+
+                Swal.fire({
+                    title: 'Xác nhận xóa',
+                    text: "Bạn có chắc chắn muốn xóa phiếu nhập hàng này?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Xóa',
+                    cancelButtonText: 'Hủy'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: '@Url.Action("Delete", "Imports")',
+                            type: 'POST',
+                            data: { id: id },
+                            success: function (response) {
+                                if (response.success) {
+                                    Swal.fire({
+                                        title: 'Thành công!',
+                                        text: response.message,
+                                        icon: 'success',
+                                        confirmButtonText: 'OK'
+                                    }).then(() => {
+                                        location.reload();
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        title: 'Lỗi!',
+                                        text: response.message,
+                                        icon: 'error',
+                                        confirmButtonText: 'OK'
+                                    });
+                                }
+                            },
+                            error: function () {
+                                Swal.fire({
+                                    title: 'Lỗi!',
+                                    text: 'Có lỗi xảy ra khi kết nối đến server',
+                                    icon: 'error',
+                                    confirmButtonText: 'OK'
+                                });
+                            }
+                        });
+                    }
+                });
+            });
+
+            // Auto-hide alerts after 3 seconds
+            setTimeout(function () {
+                $('.alert').fadeOut('slow');
+            }, 3000);
+        });
+    </script>
+}

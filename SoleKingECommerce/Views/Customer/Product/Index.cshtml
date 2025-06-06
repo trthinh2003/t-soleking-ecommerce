@@ -1,0 +1,100 @@
+﻿@{
+    ViewData["Title"] = "Sản phẩm";
+}
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-header">
+                <h5>Danh mục</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Giày nam</li>
+                    <li class="list-group-item">Giày nữ</li>
+                    <li class="list-group-item">Giày thể thao</li>
+                    <li class="list-group-item">Dép</li>
+                    <li class="list-group-item">Phụ kiện</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card mt-3">
+            <div class="card-header">
+                <h5>Lọc theo giá</h5>
+            </div>
+            <div class="card-body">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="price1">
+                    <label class="form-check-label" for="price1">
+                        Dưới 500.000đ
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="price2">
+                    <label class="form-check-label" for="price2">
+                        500.000đ - 1.000.000đ
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="price3">
+                    <label class="form-check-label" for="price3">
+                        Trên 1.000.000đ
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-9">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2>Tất cả sản phẩm</h2>
+            <div class="form-group mb-0">
+                <select class="form-control">
+                    <option>Sắp xếp theo</option>
+                    <option>Giá tăng dần</option>
+                    <option>Giá giảm dần</option>
+                    <option>Tên A-Z</option>
+                    <option>Tên Z-A</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row">
+            @for (int i = 0; i < 9; i++)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <span class="badge badge-danger position-absolute" style="top: 10px; right: 10px;">-20%</span>
+                        <img src="~/images/product-@(i+1).jpg" class="card-img-top" alt="Product @(i+1)">
+                        <div class="card-body">
+                            <h5 class="card-title">Giày thể thao @(i + 1)</h5>
+                            <p class="card-text">
+                                <span class="text-danger font-weight-bold">1.200.000đ</span>
+                                <span class="text-muted ml-2"><del>1.500.000đ</del></span>
+                            </p>
+                            <div class="d-flex justify-content-between">
+                                <a asp-controller="Product" asp-action="Detail" asp-route-id="@(i+1)" class="btn btn-sm btn-outline-primary">Chi tiết</a>
+                                <a href="#" class="btn btn-sm btn-success">Thêm vào giỏ</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                <li class="page-item disabled">
+                    <a class="page-link" href="#" tabindex="-1">Trước</a>
+                </li>
+                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item">
+                    <a class="page-link" href="#">Sau</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>

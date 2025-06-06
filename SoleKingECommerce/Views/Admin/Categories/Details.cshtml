@@ -1,0 +1,39 @@
+﻿@using SoleKingECommerce.ViewModels.Category
+@model CategoryViewModel
+@{
+    ViewData["Title"] = "Chi tiết Danh mục";
+    Layout = "_AdminLayout";
+}
+
+<div class="card">
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">Tên danh mục:</dt>
+            <dd class="col-sm-9">@Model.Name</dd>
+
+            <dt class="col-sm-3">Mô tả:</dt>
+            <dd class="col-sm-9">@Model.Description</dd>
+
+            <dt class="col-sm-3">Danh mục cha</dt>
+            <dd class="col-sm-9">@(Model.ParentId.HasValue ? ViewBag.ParentCategory?.Name : "-")</dd>
+
+            <dt class="col-sm-3">Số lượng sản phẩm</dt>
+            <dd class="col-sm-9">@Model.ProductCount</dd>
+
+            <dt class="col-sm-3">Ngày tạo:</dt>
+            <dd class="col-sm-9">@Model.CreatedAt</dd>
+
+            <dt class="col-sm-3">Lần sửa đổi gần nhất:</dt>
+            <dd class="col-sm-9">@Model.UpdatedAt</dd>
+        </dl>
+
+        <div>
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">
+                <i class="fas fa-edit"></i> Edit
+            </a>
+            <a asp-action="Index" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left"></i> Back to List
+            </a>
+        </div>
+    </div>
+</div>

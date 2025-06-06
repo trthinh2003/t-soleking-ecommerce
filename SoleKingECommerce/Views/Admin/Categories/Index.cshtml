@@ -1,0 +1,218 @@
+﻿@using SoleKingECommerce.Helpers
+@model PaginatedList<Category>
+@{
+    ViewData["Title"] = "Quản lý Danh mục";
+    Layout = "_AdminLayout";
+    var search = ViewBag.Search as string;
+    var parentCategories = ViewBag.ParentCategories as IEnumerable<Category>;
+    var currentParentId = ViewData["CurrentParentId"] as int?;
+}
+
+<div class="page-header flex-row">
+    <form method="get" asp-action="Index" class="d-flex align-items-center w-75" style="gap: 1rem;">
+        <input 
+            type="text" 
+            name="searchString" 
+            value="@ViewData["CurrentFilter"]" 
+            class="form-control" 
+            placeholder="Tìm kiếm danh mục..." 
+            style="max-width: 300px;" 
+        />
+
+        <select name="parentId" class="form-control" style="max-width: 250px;">
+            <option value="">-- Tất cả danh mục --</option>
+            @foreach (var category in parentCategories)
+            {
+                <option value="@category.Id" selected="@(currentParentId == category.Id)">@category.Name</option>
+            }
+        </select>
+
+        <button type="submit" class="btn btn-outline-primary">
+            <i class="fas fa-search"></i> <span class="d-none d-md-inline text-nowrap">Tìm kiếm</span>
+        </button>
+    </form>
+    <a asp-action="Create" class="btn btn-primary mt-3">
+        <i class="fas fa-plus"></i> <span class="d-none d-md-inline">Thêm mới</span>
+    </a>
+</div>
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+<div class="card">
+    <div class="card-body overflow-auto">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Tên danh mục</th>
+                    <th>Mô tả</th>
+                    <th>Danh mục cha</th>
+                    <th class="text-center">Số lượng sản phẩm</th>
+                    <th class="text-center">Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="fw-bold">@item.Name</td>
+                        <td>@(item.Description?.Length > 50 ? item.Description.Substring(0, 50) + "..." : item.Description)</td>
+                        <td>@(item.ParentId.HasValue ? parentCategories.FirstOrDefault(c => c.Id == item.ParentId)?.Name : "-")</td>
+                        <td class="text-center">@item.Products.Count</td>
+                        <td class="text-center">
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning" style="color: coral;">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info">
+                                <i class="fas fa-info-circle"></i>
+                            </a>
+                            <button type="button" class="btn btn-sm btn-outline-danger delete-btn" data-id="@item.Id">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<div class="d-flex justify-content-center mt-3">
+    <nav>
+        <ul class="pagination">
+            <li class="page-item @prevDisabled">
+                <a asp-action="Index"
+                   asp-route-pageNumber="1"
+                   asp-route-searchString="@ViewData["CurrentFilter"]"
+                   asp-route-parentId="@ViewData["CurrentParentId"]"
+                   class="page-link">
+                    &laquo;&laquo;
+                </a>
+            </li>
+            <li class="page-item @prevDisabled">
+                <a asp-action="Index"
+                   asp-route-pageNumber="@(Model.PageIndex - 1)"
+                   asp-route-searchString="@ViewData["CurrentFilter"]"
+                   asp-route-parentId="@ViewData["CurrentParentId"]"
+                   class="page-link">
+                    &laquo;
+                </a>
+            </li>
+
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.PageIndex ? "active" : "")">
+                    <a asp-action="Index"
+                       asp-route-pageNumber="@i"
+                       asp-route-searchString="@ViewData["CurrentFilter"]"
+                       asp-route-parentId="@ViewData["CurrentParentId"]"
+                       class="page-link">
+                        @i
+                    </a>
+                </li>
+            }
+
+            <li class="page-item @nextDisabled">
+                <a asp-action="Index"
+                   asp-route-pageNumber="@(Model.PageIndex + 1)"
+                   asp-route-searchString="@ViewData["CurrentFilter"]"
+                   asp-route-parentId="@ViewData["CurrentParentId"]"
+                   class="page-link">
+                    &raquo;
+                </a>
+            </li>
+            <li class="page-item @nextDisabled">
+                <a asp-action="Index"
+                   asp-route-pageNumber="@Model.TotalPages"
+                   asp-route-searchString="@ViewData["CurrentFilter"]"
+                   asp-route-parentId="@ViewData["CurrentParentId"]"
+                   class="page-link">
+                    &raquo;&raquo;
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('.delete-btn').click(function (e) {
+                e.preventDefault();
+                var id = $(this).data('id');
+                var url = '@Url.Action("Delete", "Categories")';
+                var token = $('input[name="__RequestVerificationToken"]').val();
+
+                Swal.fire({
+                    title: 'Xác nhận xóa',
+                    text: "Bạn có chắc chắn muốn xóa danh mục này? Tất cả sản phẩm thuộc danh mục này sẽ bị xóa theo!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Xóa',
+                    cancelButtonText: 'Hủy'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: url,
+                            type: 'POST',
+                            data: {
+                                __RequestVerificationToken: token,
+                                id: id
+                            },
+                            success: function (response) {
+                                if (response.success) {
+                                    Swal.fire({
+                                        title: 'Thành công!',
+                                        text: response.message,
+                                        icon: 'success',
+                                        confirmButtonText: 'OK'
+                                    }).then(() => {
+                                        location.reload();
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        title: 'Lỗi!',
+                                        text: response.message,
+                                        icon: 'error',
+                                        confirmButtonText: 'OK'
+                                    });
+                                }
+                            },
+                            error: function (xhr) {
+                                Swal.fire({
+                                    title: 'Lỗi!',
+                                    text: 'Có lỗi xảy ra khi kết nối đến server',
+                                    icon: 'error',
+                                    confirmButtonText: 'OK'
+                                });
+                            }
+                        });
+                    }
+                });
+            });
+
+            // Tự động ẩn thông báo sau 3 giây
+            setTimeout(function () {
+                $('.alert').fadeOut('slow');
+            }, 3000);
+        });
+    </script>
+}

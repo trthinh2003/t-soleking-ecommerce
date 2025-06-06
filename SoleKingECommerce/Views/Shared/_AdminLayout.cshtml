@@ -1,0 +1,140 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["title"]</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="~/css/admin/main.css">
+    @await RenderSectionAsync("styles", required: false)
+</head>
+
+<body>
+    <!-- Sidebar -->
+    @await Html.PartialAsync("_AdminSidebar")
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Topbar -->
+        <div class="topbar">
+            <div class="toggle-sidebar" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </div>
+            <div class="user-info">
+                <img src="" alt="User" class="rounded-circle" />
+                <div class="dropdown">
+                    <button class="btn border-0 dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <span>Xin chào, @User.Identity.Name</span>
+                        }
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end menu-dropdown" aria-labelledby="dropdownMenuButton1">
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-fw fa-user pe-2"></i>Hồ sơ</a></li>
+                        <li>
+                            <form asp-controller="Auth" asp-action="Logout" method="post">
+                                <button class="dropdown-item" type="submit"><i class="fas fa-fw fa-sign-out-alt pe-2"></i>Đăng xuất</button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="content-container">
+            <div class="page-header">
+                <h1>@ViewData["title"]</h1>
+            </div>
+
+            @RenderBody()
+        </div>
+    </main>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById("sidebar");
+            const isMobile = window.innerWidth <= 576;
+
+            if (isMobile) {
+                sidebar.classList.toggle("show");
+            } else {
+                sidebar.classList.toggle("sidebar-collapsed");
+                const isCollapsed = sidebar.classList.contains("sidebar-collapsed");
+                localStorage.setItem('sidebarCollapsed', isCollapsed);
+            }
+        }
+
+        function toggleDropdown(menuId) {
+            const dropdown = document.getElementById(menuId + "-dropdown");
+            const arrow = document.getElementById(menuId + "-arrow");
+
+            dropdown.classList.toggle("show");
+
+            if (dropdown.classList.contains("show")) {
+                arrow.classList.remove("fa-angle-right");
+                arrow.classList.add("fa-angle-down");
+            } else {
+                arrow.classList.remove("fa-angle-down");
+                arrow.classList.add("fa-angle-right");
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const sidebar = document.getElementById("sidebar");
+            const isCollapsed = localStorage.getItem("sidebarCollapsed") === "true";
+            if (isCollapsed) {
+                sidebar.classList.add("sidebar-collapsed");
+            }
+
+            document.querySelector(".close-sidebar").addEventListener("click", function() {
+                document.getElementById("sidebar").classList.remove("show");
+            });
+
+            const menuItems = document.querySelectorAll(".menu-item");
+            menuItems.forEach((item) => {
+                item.addEventListener("click", function (e) {
+                    if (
+                        !e.target.classList.contains("fa-angle-right") &&
+                        !e.target.classList.contains("fa-angle-down")
+                    ) {
+                        menuItems.forEach((i) => i.classList.remove("active"));
+                        this.classList.add("active");
+                    }
+                });
+            });
+
+            const dropdownItems = document.querySelectorAll(".dropdown-item");
+            dropdownItems.forEach((item) => {
+                item.addEventListener("click", function () {
+                    dropdownItems.forEach((i) => i.classList.remove("active"));
+                    this.classList.add("active");
+                });
+            });
+
+            document.addEventListener("click", function (e) {
+                const sidebar = document.getElementById("sidebar");
+                const toggleBtn = document.querySelector(".toggle-sidebar");
+
+                if (
+                    window.innerWidth <= 576 &&
+                    !sidebar.contains(e.target) &&
+                    e.target !== toggleBtn &&
+                    !toggleBtn.contains(e.target)
+                ) {
+                    sidebar.classList.add("d-block");
+                    sidebar.classList.remove("show");
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

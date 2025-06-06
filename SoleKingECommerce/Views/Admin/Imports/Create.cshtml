@@ -1,0 +1,213 @@
+﻿@model SoleKingECommerce.ViewModels.Import.ImportCreateViewModel
+@{
+    ViewData["Title"] = "Tạo phiếu nhập hàng";
+    Layout = "_AdminLayout";
+}
+
+<div class="page-header p-0 mb-0">
+    <div class="header-content">
+        <a asp-action="Index" class="btn btn-outline-secondary btn-back">
+            <i class="fas fa-arrow-left me-2"></i>Quay lại
+        </a>
+    </div>
+</div>
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-circle me-2"></i>
+        @TempData["ErrorMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<form asp-action="Create" id="importForm" class="import-form">
+    <div class="row g-4">
+        <div class="col-lg-4">
+            <div class="card card-info">
+                <div class="card-header bg-secondary">
+                    <h5 class="card-title mb-0 text-white">
+                        <i class="fas fa-info-circle me-2"></i>Thông tin chung
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label asp-for="SupplierId" class="form-label required">
+                            <i class="fas fa-truck me-2"></i>Nhà cung cấp
+                        </label>
+                        <select asp-for="SupplierId" asp-items="@(new SelectList(ViewBag.Suppliers, "Id", "Name"))" class="form-select select2">
+                            <option value="">-- Chọn nhà cung cấp --</option>
+                        </select>
+                        <span asp-validation-for="SupplierId" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Note" class="form-label">
+                            <i class="fas fa-sticky-note me-2"></i>Ghi chú
+                        </label>
+                        <textarea asp-for="Note" class="form-control" rows="3" placeholder="Nhập ghi chú (nếu có)"></textarea>
+                        <span asp-validation-for="Note" class="text-danger small"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <div class="card card-products">
+                <div class="card-header bg-secondary d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0 text-white">
+                        Danh sách sản phẩm
+                    </h5>
+                    <button type="button" class="btn btn-sm btn-light" id="addProductBtn">
+                        <i class="fas fa-plus me-2"></i>Thêm sản phẩm
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div id="productItemsContainer" class="product-items-container">
+                        @for (int i = 0; i < Model.Items.Count; i++)
+                        {
+                            <partial name="_ImportItemPartial" model="Model.Items[i]" />
+                        }
+                    </div>
+
+                    <div class="import-summary mt-4">
+                        <div class="total-price">
+                            <span class="label">Tổng giá trị:</span>
+                            <span class="amount" id="totalPrice">0</span>
+                            <span class="currency">đ</span>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-save">
+                            <i class="fas fa-save me-2"></i>Lưu phiếu nhập
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" />
+    <link rel="stylesheet" href="~/css/admin/import-create.css" />
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Initialize Select2
+            $('.select2').select2({
+                placeholder: "-- Chọn nhà cung cấp --",
+                width: '100%'
+            });
+
+            let itemIndex = @Model.Items.Count;
+
+            // Add new product item
+            $('#addProductBtn').click(function() {
+                $.ajax({
+                    url: '@Url.Action("AddImportItem", "Imports")',
+                    type: 'GET',
+                    data: { index: itemIndex },
+                    success: function(data) {
+                        $('#productItemsContainer').append(data);
+                        updateTotalPrice();
+                        itemIndex++;
+
+                        // Initialize Select2 for new dropdowns
+                        $('.product-item:last-child .form-select').select2({
+                            width: '100%'
+                        });
+                    },
+                    error: function() {
+                        alert('Không thể thêm sản phẩm. Vui lòng thử lại!');
+                    }
+                });
+            });
+
+            // Remove product item
+            $(document).on('click', '.remove-item-btn', function() {
+                var $item = $(this).closest('.product-item');
+                $item.fadeOut(300, function() {
+                    $item.remove();
+                    reindexItems();
+                    updateTotalPrice();
+                });
+            });
+
+            // Re-index items to ensure correct form binding
+            function reindexItems() {
+                $('.product-item').each(function(index) {
+                    var $item = $(this);
+
+                    // Update all input, select, textarea elements
+                    $item.find('input, select, textarea').each(function() {
+                        var $element = $(this);
+                        var name = $element.attr('name');
+                        var id = $element.attr('id');
+
+                        if (name && name.includes('Items[')) {
+                            // Replace Items[oldIndex] with Items[newIndex]
+                            var newName = name.replace(/Items\[\d+\]/, 'Items[' + index + ']');
+                            $element.attr('name', newName);
+                        }
+
+                        if (id && id.includes('Items_')) {
+                            // Replace Items_oldIndex__ with Items_newIndex__
+                            var newId = id.replace(/Items_\d+__/, 'Items_' + index + '__');
+                            $element.attr('id', newId);
+                        }
+                    });
+
+                    // Update product number display
+                    $item.find('.product-number').text(index + 1);
+
+                    // Update data-index attribute
+                    $item.attr('data-index', index);
+                });
+            }
+
+            // Calculate total price when quantity or price changes
+            $(document).on('input', '.quantity-input, .price-input', function() {
+                updateItemTotal($(this).closest('.product-item'));
+                updateTotalPrice();
+            });
+
+            // Update total price initially
+            updateTotalPrice();
+
+            function updateItemTotal(item) {
+                const quantity = parseFloat(item.find('.quantity-input').val()) || 0;
+                const price = parseFloat(item.find('.price-input').val()) || 0;
+                const total = quantity * price;
+                item.find('.item-total').text(total.toLocaleString('vi-VN') + 'đ');
+            }
+
+            function updateTotalPrice() {
+                let total = 0;
+                $('.product-item').each(function() {
+                    const quantity = parseFloat($(this).find('.quantity-input').val()) || 0;
+                    const price = parseFloat($(this).find('.price-input').val()) || 0;
+                    total += quantity * price;
+                });
+                $('#totalPrice').text(total.toLocaleString('vi-VN'));
+            }
+
+            // Auto-hide alerts after 5 seconds
+            setTimeout(function () {
+                $('.alert').fadeOut('slow');
+            }, 5000);
+
+            // Debug: Log form data before submit
+            $('#importForm').on('submit', function(e) {
+                console.log('Form data before submit:');
+                var formData = new FormData(this);
+                for (var pair of formData.entries()) {
+                    console.log(pair[0] + ': ' + pair[1]);
+                }
+            });
+        });
+    </script>
+}

@@ -1,0 +1,118 @@
+﻿@{
+    var isDashboardActive = ViewContext.RouteData.Values["Controller"]?.ToString() == "Dashboard";
+    var isCategoriesActive = ViewContext.RouteData.Values["Controller"]?.ToString() == "Categories";
+}
+
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <img src="~/img/logo/t-soleking-logo.png" asp-append-version="true" alt="Logo" class="sidebar-logo" width="40"/>
+        <h3>T-SoleKing Admin</h3>
+        <i class="fas fa-times close-sidebar d-sm-none d-block"></i>
+    </div>
+    <div class="sidebar-menu">
+        <div class="menu-title">TỔNG QUAN</div>
+        <a asp-controller="Dashboard" asp-action="Index" class="menu-item @(isDashboardActive ? "active" : "")">
+            <div>
+                <i class="fas fa-fw fa-tachometer-alt"></i>
+                <span>Bảng điều khiển</span>
+            </div>
+        </a>
+
+        <div class="menu-title">QUẢN LÝ SẢN PHẨM</div>
+        <div class="menu-item" onclick="toggleDropdown('products')">
+            <div>
+                <i class="fas fa-fw fa-shoe-prints"></i>
+                <span>Sản phẩm</span>
+            </div>
+            <i class="fas fa-fw fa-angle-right ml-auto" id="products-arrow"></i>
+        </div>
+        <div class="menu-dropdown" id="products-dropdown">
+            <a asp-controller="Products" asp-action="Index" class="dropdown-item">
+                <span>Tất cả sản phẩm</span>
+            </a>
+            <a asp-controller="Products" asp-action="Create" class="dropdown-item">
+                <span>Thêm sản phẩm mới</span>
+            </a>
+        </div>
+
+        <div class="menu-item @(isCategoriesActive ? "active" : "")" onclick="toggleDropdown('categories')">
+            <div>
+                <i class="fas fa-fw fa-tags"></i>
+                <span>Danh mục</span>
+            </div>
+            <i class="fas fa-fw fa-angle-right ml-auto" id="categories-arrow"></i>
+        </div>
+        <div class="menu-dropdown" id="categories-dropdown">
+            <a asp-controller="Categories" asp-action="Index" class="dropdown-item">
+                <span>Tất cả danh mục</span>
+            </a>
+            <a asp-controller="Categories" asp-action="Create" class="dropdown-item">
+                <span>Thêm danh mục</span>
+            </a>
+        </div>
+
+        <div class="menu-title">QUẢN LÝ BÁN HÀNG</div>
+        <div class="menu-item" onclick="toggleDropdown('orders')">
+            <div>
+                <i class="fas fa-fw fa-shopping-cart"></i>
+                <span>Đơn hàng</span>
+            </div>
+            <i class="fas fa-fw fa-angle-right ml-auto" id="orders-arrow"></i>
+        </div>
+        <div class="menu-dropdown" id="orders-dropdown">
+            <a asp-controller="Orders" asp-action="Index" class="dropdown-item">
+                <span>Tất cả đơn hàng</span>
+            </a>
+            <a asp-controller="Orders" asp-action="Create" class="dropdown-item">
+                <span>Tạo đơn hàng</span>
+            </a>
+        </div>
+
+        <div class="menu-title">KHUYẾN MÃI</div>
+        <a asp-controller="Discounts" asp-action="Index" class="menu-item">
+            <div>
+                <i class="fas fa-fw fa-percentage"></i>
+                <span>Mã giảm giá</span>
+            </div>
+        </a>
+
+        <div class="menu-title">QUẢN LÝ KHO HÀNG</div>
+        <div class="menu-item" onclick="toggleDropdown('stocks')">
+            <div>
+                <i class="fas fa-fw fa-store"></i>
+                <span>Kho hàng</span>
+            </div>
+            <i class="fas fa-fw fa-angle-right ml-auto" id="stocks-arrow"></i>
+        </div>
+        <div class="menu-dropdown" id="stocks-dropdown">
+            <a asp-controller="Imports" asp-action="Index" class="dropdown-item">
+                <span>Quản lý nhập hàng</span>
+            </a>
+            <a asp-controller="Suppliers" asp-action="Index" class="dropdown-item">
+                <span>Quản lý nhà cung cấp</span>
+            </a>
+        </div>
+
+        <div class="menu-title">BÁO CÁO</div>
+        <a asp-controller="Reports" asp-action="Sales" class="menu-item">
+            <div>
+                <i class="fas fa-fw fa-chart-bar"></i>
+                <span>Thống kê bán hàng</span>
+            </div>
+        </a>
+        <a asp-controller="Reports" asp-action="Revenue" class="menu-item">
+            <div>
+                <i class="fas fa-fw fa-file-invoice-dollar"></i>
+                <span>Doanh thu</span>
+            </div>
+        </a>
+
+        <div class="menu-title">HỆ THỐNG</div>
+        <a asp-controller="Users" asp-action="Index" class="menu-item">
+            <div>
+                <i class="fas fa-fw fa-users"></i>
+                <span>Người dùng</span>
+            </div>
+        </a>
+    </div>
+</aside>

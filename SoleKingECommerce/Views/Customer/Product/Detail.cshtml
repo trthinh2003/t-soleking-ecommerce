@@ -1,0 +1,193 @@
+﻿@{
+    ViewData["Title"] = "Chi tiết sản phẩm";
+}
+
+<div class="row">
+    <div class="col-md-5">
+        <div class="mb-3">
+            <img src="~/images/product-1.jpg" class="img-fluid" alt="Product">
+        </div>
+        <div class="row">
+            <div class="col-3">
+                <img src="~/images/product-1-thumb.jpg" class="img-thumbnail" alt="Thumbnail">
+            </div>
+            <div class="col-3">
+                <img src="~/images/product-1-thumb2.jpg" class="img-thumbnail" alt="Thumbnail">
+            </div>
+            <div class="col-3">
+                <img src="~/images/product-1-thumb3.jpg" class="img-thumbnail" alt="Thumbnail">
+            </div>
+            <div class="col-3">
+                <img src="~/images/product-1-thumb4.jpg" class="img-thumbnail" alt="Thumbnail">
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-7">
+        <h2>Giày thể thao cao cấp XYZ</h2>
+        <div class="d-flex align-items-center mb-3">
+            <div class="text-warning mr-2">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star-half-alt"></i>
+            </div>
+            <span class="text-muted">(15 đánh giá)</span>
+        </div>
+
+        <div class="mb-3">
+            <span class="text-danger font-weight-bold h4">1.200.000đ</span>
+            <span class="text-muted ml-2"><del>1.500.000đ</del></span>
+            <span class="badge badge-danger ml-2">-20%</span>
+        </div>
+
+        <p class="mb-4">Giày thể thao XYZ với thiết kế hiện đại, chất liệu da cao cấp, đế êm ái phù hợp cho mọi hoạt động thể thao và đi lại hàng ngày.</p>
+
+        <div class="mb-4">
+            <h5>Màu sắc</h5>
+            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                <label class="btn btn-outline-secondary active">
+                    <input type="radio" name="color" checked> Đen
+                </label>
+                <label class="btn btn-outline-secondary">
+                    <input type="radio" name="color"> Trắng
+                </label>
+                <label class="btn btn-outline-secondary">
+                    <input type="radio" name="color"> Xanh
+                </label>
+            </div>
+        </div>
+
+        <div class="mb-4">
+            <h5>Kích cỡ</h5>
+            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                <label class="btn btn-outline-secondary">
+                    <input type="radio" name="size"> 38
+                </label>
+                <label class="btn btn-outline-secondary">
+                    <input type="radio" name="size"> 39
+                </label>
+                <label class="btn btn-outline-secondary active">
+                    <input type="radio" name="size" checked> 40
+                </label>
+                <label class="btn btn-outline-secondary">
+                    <input type="radio" name="size"> 41
+                </label>
+                <label class="btn btn-outline-secondary">
+                    <input type="radio" name="size"> 42
+                </label>
+            </div>
+        </div>
+
+        <div class="d-flex align-items-center mb-4">
+            <div class="input-group mr-3" style="width: 120px;">
+                <div class="input-group-prepend">
+                    <button class="btn btn-outline-secondary" type="button">-</button>
+                </div>
+                <input type="text" class="form-control text-center" value="1">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="button">+</button>
+                </div>
+            </div>
+            <button class="btn btn-danger btn-lg">Thêm vào giỏ hàng</button>
+        </div>
+
+        <div class="d-flex">
+            <button class="btn btn-outline-secondary mr-2"><i class="far fa-heart"></i> Yêu thích</button>
+            <button class="btn btn-outline-secondary"><i class="fas fa-share-alt"></i> Chia sẻ</button>
+        </div>
+    </div>
+</div>
+
+<div class="mt-5">
+    <ul class="nav nav-tabs" id="productTabs" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="description-tab" data-toggle="tab" href="#description" role="tab">Mô tả</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="specs-tab" data-toggle="tab" href="#specs" role="tab">Thông số</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="reviews-tab" data-toggle="tab" href="#reviews" role="tab">Đánh giá</a>
+        </li>
+    </ul>
+    <div class="tab-content p-3 border border-top-0" id="productTabsContent">
+        <div class="tab-pane fade show active" id="description" role="tabpanel">
+            <p>Giày thể thao XYZ được thiết kế với công nghệ đế AirMax giúp giảm chấn động khi vận động. Chất liệu da tổng hợp cao cấp, thoáng khí, không gây hôi chân. Đế ngoài bằng cao su chống trơn trượt hiệu quả.</p>
+            <p>Phù hợp cho nhiều môn thể thao như chạy bộ, tập gym, đi bộ hoặc sử dụng hàng ngày.</p>
+        </div>
+        <div class="tab-pane fade" id="specs" role="tabpanel">
+            <table class="table">
+                <tr>
+                    <th>Chất liệu</th>
+                    <td>Da tổng hợp cao cấp</td>
+                </tr>
+                <tr>
+                    <th>Đế giày</th>
+                    <td>Cao su chống trơn, công nghệ AirMax</td>
+                </tr>
+                <tr>
+                    <th>Trọng lượng</th>
+                    <td>350g/chiếc (size 40)</td>
+                </tr>
+                <tr>
+                    <th>Xuất xứ</th>
+                    <td>Việt Nam</td>
+                </tr>
+            </table>
+        </div>
+        <div class="tab-pane fade" id="reviews" role="tabpanel">
+            <div class="media mb-4">
+                <img src="~/images/avatar1.jpg" class="mr-3 rounded-circle" width="50" alt="User">
+                <div class="media-body">
+                    <h5 class="mt-0">Nguyễn Văn A</h5>
+                    <div class="text-warning mb-2">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p>Giày rất đẹp và êm chân. Tôi rất hài lòng với sản phẩm này.</p>
+                </div>
+            </div>
+            <div class="media">
+                <img src="~/images/avatar2.jpg" class="mr-3 rounded-circle" width="50" alt="User">
+                <div class="media-body">
+                    <h5 class="mt-0">Trần Thị B</h5>
+                    <div class="text-warning mb-2">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="far fa-star"></i>
+                    </div>
+                    <p>Giày tốt nhưng màu hơi khác so với hình ảnh. Dịch vụ giao hàng nhanh.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-5">
+    <h3 class="mb-4">Sản phẩm tương tự</h3>
+    <div class="row">
+        @for (int i = 0; i < 4; i++)
+        {
+            <div class="col-md-3 mb-4">
+                <div class="card h-100">
+                    <img src="~/images/product-@(i+2).jpg" class="card-img-top" alt="Product @(i+2)">
+                    <div class="card-body">
+                        <h5 class="card-title">Giày thể thao @(i + 2)</h5>
+                        <p class="card-text text-danger font-weight-bold">1.200.000đ</p>
+                        <div class="d-flex justify-content-between">
+                            <a href="#" class="btn btn-sm btn-outline-primary">Chi tiết</a>
+                            <a href="#" class="btn btn-sm btn-success">Thêm vào giỏ</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

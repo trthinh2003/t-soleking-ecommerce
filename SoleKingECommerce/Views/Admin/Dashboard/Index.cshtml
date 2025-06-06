@@ -1,0 +1,85 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "_AdminLayout";
+}
+
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="card stats-card">
+            <div class="icon">
+                <i class="fas fa-shoe-prints"></i>
+            </div>
+            <div class="count">@ViewBag.TotalProducts</div>
+            <div class="label">Tổng sản phẩm</div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card stats-card">
+            <div class="icon">
+                <i class="fas fa-tags"></i>
+            </div>
+            <div class="count">@ViewBag.TotalCategories</div>
+            <div class="label">Danh mục</div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card stats-card">
+            <div class="icon">
+                <i class="fas fa-shopping-cart"></i>
+            </div>
+            <div class="count">@ViewBag.TodayOrders</div>
+            <div class="label">Đơn hàng hôm nay</div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5>Đơn hàng gần đây</h5>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Mã đơn</th>
+                            <th>Khách hàng</th>
+                            <th>Tổng tiền</th>
+                            <th>Trạng thái</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @* @foreach (var order in ViewBag.RecentOrders) *@
+                        @* { *@
+                        @*     <tr> *@
+                        @*         <td>#@order.Id</td> *@
+                        @*         <td>@order.CustomerName</td> *@
+                        @*         <td>@order.TotalAmount.ToString("N0") ₫</td> *@
+                        @*         <td><span class="badge bg-info">@order.Status</span></td> *@
+                        @*     </tr> *@
+                        @* } *@
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5>Sản phẩm bán chạy</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-group">
+                    @* @foreach (var product in ViewBag.TopProducts) *@
+                    @* { *@
+                    @*     <li class="list-group-item d-flex justify-content-between align-items-center"> *@
+                    @*         @product.Name *@
+                    @*         <span class="badge bg-primary rounded-pill">@product.SoldQuantity</span> *@
+                    @*     </li> *@
+                    @* } *@
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

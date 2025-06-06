@@ -1,0 +1,185 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "E:\\ProjectCV\\shoes-ecommerce\\SoleKingECommerce\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{1333A3E1-73B2-41AF-AD5D-E172F1F356AD}|SoleKingECommerce\\SoleKingECommerce.csproj|e:\\projectcv\\shoes-ecommerce\\solekingecommerce\\solekingecommerce\\views\\admin\\imports\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{1333A3E1-73B2-41AF-AD5D-E172F1F356AD}|SoleKingECommerce\\SoleKingECommerce.csproj|solutionrelative:solekingecommerce\\views\\admin\\imports\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1333A3E1-73B2-41AF-AD5D-E172F1F356AD}|SoleKingECommerce\\SoleKingECommerce.csproj|e:\\projectcv\\shoes-ecommerce\\solekingecommerce\\solekingecommerce\\views\\admin\\imports\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{1333A3E1-73B2-41AF-AD5D-E172F1F356AD}|SoleKingECommerce\\SoleKingECommerce.csproj|solutionrelative:solekingecommerce\\views\\admin\\imports\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1333A3E1-73B2-41AF-AD5D-E172F1F356AD}|SoleKingECommerce\\SoleKingECommerce.csproj|e:\\projectcv\\shoes-ecommerce\\solekingecommerce\\solekingecommerce\\wwwroot\\css\\admin\\import-create.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{1333A3E1-73B2-41AF-AD5D-E172F1F356AD}|SoleKingECommerce\\SoleKingECommerce.csproj|solutionrelative:solekingecommerce\\wwwroot\\css\\admin\\import-create.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1333A3E1-73B2-41AF-AD5D-E172F1F356AD}|SoleKingECommerce\\SoleKingECommerce.csproj|e:\\projectcv\\shoes-ecommerce\\solekingecommerce\\solekingecommerce\\views\\shared\\_importitempartial.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{1333A3E1-73B2-41AF-AD5D-E172F1F356AD}|SoleKingECommerce\\SoleKingECommerce.csproj|solutionrelative:solekingecommerce\\views\\shared\\_importitempartial.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1333A3E1-73B2-41AF-AD5D-E172F1F356AD}|SoleKingECommerce\\SoleKingECommerce.csproj|e:\\projectcv\\shoes-ecommerce\\solekingecommerce\\solekingecommerce\\controllers\\admin\\importscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1333A3E1-73B2-41AF-AD5D-E172F1F356AD}|SoleKingECommerce\\SoleKingECommerce.csproj|solutionrelative:solekingecommerce\\controllers\\admin\\importscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1333A3E1-73B2-41AF-AD5D-E172F1F356AD}|SoleKingECommerce\\SoleKingECommerce.csproj|e:\\projectcv\\shoes-ecommerce\\solekingecommerce\\solekingecommerce\\viewmodels\\import\\importitemviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1333A3E1-73B2-41AF-AD5D-E172F1F356AD}|SoleKingECommerce\\SoleKingECommerce.csproj|solutionrelative:solekingecommerce\\viewmodels\\import\\importitemviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1333A3E1-73B2-41AF-AD5D-E172F1F356AD}|SoleKingECommerce\\SoleKingECommerce.csproj|e:\\projectcv\\shoes-ecommerce\\solekingecommerce\\solekingecommerce\\repositories\\implementations\\importrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1333A3E1-73B2-41AF-AD5D-E172F1F356AD}|SoleKingECommerce\\SoleKingECommerce.csproj|solutionrelative:solekingecommerce\\repositories\\implementations\\importrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1333A3E1-73B2-41AF-AD5D-E172F1F356AD}|SoleKingECommerce\\SoleKingECommerce.csproj|e:\\projectcv\\shoes-ecommerce\\solekingecommerce\\solekingecommerce\\services\\implementations\\importservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1333A3E1-73B2-41AF-AD5D-E172F1F356AD}|SoleKingECommerce\\SoleKingECommerce.csproj|solutionrelative:solekingecommerce\\services\\implementations\\importservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1333A3E1-73B2-41AF-AD5D-E172F1F356AD}|SoleKingECommerce\\SoleKingECommerce.csproj|e:\\projectcv\\shoes-ecommerce\\solekingecommerce\\solekingecommerce\\views\\admin\\imports\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{1333A3E1-73B2-41AF-AD5D-E172F1F356AD}|SoleKingECommerce\\SoleKingECommerce.csproj|solutionrelative:solekingecommerce\\views\\admin\\imports\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 9,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{eefa5220-e298-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:716471800:0:{83107a3e-496a-485e-b455-16ddb978e55e}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Details.cshtml",
+              "DocumentMoniker": "E:\\ProjectCV\\shoes-ecommerce\\SoleKingECommerce\\SoleKingECommerce\\Views\\Admin\\Imports\\Details.cshtml",
+              "RelativeDocumentMoniker": "SoleKingECommerce\\Views\\Admin\\Imports\\Details.cshtml",
+              "ToolTip": "E:\\ProjectCV\\shoes-ecommerce\\SoleKingECommerce\\SoleKingECommerce\\Views\\Admin\\Imports\\Details.cshtml",
+              "RelativeToolTip": "SoleKingECommerce\\Views\\Admin\\Imports\\Details.cshtml",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-06-06T03:25:38.402Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "_ImportItemPartial.cshtml",
+              "DocumentMoniker": "E:\\ProjectCV\\shoes-ecommerce\\SoleKingECommerce\\SoleKingECommerce\\Views\\Shared\\_ImportItemPartial.cshtml",
+              "RelativeDocumentMoniker": "SoleKingECommerce\\Views\\Shared\\_ImportItemPartial.cshtml",
+              "ToolTip": "E:\\ProjectCV\\shoes-ecommerce\\SoleKingECommerce\\SoleKingECommerce\\Views\\Shared\\_ImportItemPartial.cshtml",
+              "RelativeToolTip": "SoleKingECommerce\\Views\\Shared\\_ImportItemPartial.cshtml",
+              "ViewState": "AgIAAAEAAAAAAAAAAAAqwHIAAAAGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-06-06T02:53:24.638Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "ImportItemViewModel.cs",
+              "DocumentMoniker": "E:\\ProjectCV\\shoes-ecommerce\\SoleKingECommerce\\SoleKingECommerce\\ViewModels\\Import\\ImportItemViewModel.cs",
+              "RelativeDocumentMoniker": "SoleKingECommerce\\ViewModels\\Import\\ImportItemViewModel.cs",
+              "ToolTip": "E:\\ProjectCV\\shoes-ecommerce\\SoleKingECommerce\\SoleKingECommerce\\ViewModels\\Import\\ImportItemViewModel.cs",
+              "RelativeToolTip": "SoleKingECommerce\\ViewModels\\Import\\ImportItemViewModel.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAmAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-06T02:41:56.002Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "ImportRepository.cs",
+              "DocumentMoniker": "E:\\ProjectCV\\shoes-ecommerce\\SoleKingECommerce\\SoleKingECommerce\\Repositories\\Implementations\\ImportRepository.cs",
+              "RelativeDocumentMoniker": "SoleKingECommerce\\Repositories\\Implementations\\ImportRepository.cs",
+              "ToolTip": "E:\\ProjectCV\\shoes-ecommerce\\SoleKingECommerce\\SoleKingECommerce\\Repositories\\Implementations\\ImportRepository.cs",
+              "RelativeToolTip": "SoleKingECommerce\\Repositories\\Implementations\\ImportRepository.cs",
+              "ViewState": "AgIAAFAAAAAAAAAAAAAAwFoAAABFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-06T02:34:53.739Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "import-create.css",
+              "DocumentMoniker": "E:\\ProjectCV\\shoes-ecommerce\\SoleKingECommerce\\SoleKingECommerce\\wwwroot\\css\\admin\\import-create.css",
+              "RelativeDocumentMoniker": "SoleKingECommerce\\wwwroot\\css\\admin\\import-create.css",
+              "ToolTip": "E:\\ProjectCV\\shoes-ecommerce\\SoleKingECommerce\\SoleKingECommerce\\wwwroot\\css\\admin\\import-create.css",
+              "RelativeToolTip": "SoleKingECommerce\\wwwroot\\css\\admin\\import-create.css",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAAAB8AAAAeAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2025-06-06T02:14:58.338Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "ImportsController.cs",
+              "DocumentMoniker": "E:\\ProjectCV\\shoes-ecommerce\\SoleKingECommerce\\SoleKingECommerce\\Controllers\\Admin\\ImportsController.cs",
+              "RelativeDocumentMoniker": "SoleKingECommerce\\Controllers\\Admin\\ImportsController.cs",
+              "ToolTip": "E:\\ProjectCV\\shoes-ecommerce\\SoleKingECommerce\\SoleKingECommerce\\Controllers\\Admin\\ImportsController.cs",
+              "RelativeToolTip": "SoleKingECommerce\\Controllers\\Admin\\ImportsController.cs",
+              "ViewState": "AgIAAIIAAAAAAAAAAAAqwK0AAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-05T16:53:51.747Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Create.cshtml",
+              "DocumentMoniker": "E:\\ProjectCV\\shoes-ecommerce\\SoleKingECommerce\\SoleKingECommerce\\Views\\Admin\\Imports\\Create.cshtml",
+              "RelativeDocumentMoniker": "SoleKingECommerce\\Views\\Admin\\Imports\\Create.cshtml",
+              "ToolTip": "E:\\ProjectCV\\shoes-ecommerce\\SoleKingECommerce\\SoleKingECommerce\\Views\\Admin\\Imports\\Create.cshtml",
+              "RelativeToolTip": "SoleKingECommerce\\Views\\Admin\\Imports\\Create.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAcAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-06-05T16:31:37.079Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "E:\\ProjectCV\\shoes-ecommerce\\SoleKingECommerce\\SoleKingECommerce\\Views\\Admin\\Imports\\Index.cshtml",
+              "RelativeDocumentMoniker": "SoleKingECommerce\\Views\\Admin\\Imports\\Index.cshtml",
+              "ToolTip": "E:\\ProjectCV\\shoes-ecommerce\\SoleKingECommerce\\SoleKingECommerce\\Views\\Admin\\Imports\\Index.cshtml",
+              "RelativeToolTip": "SoleKingECommerce\\Views\\Admin\\Imports\\Index.cshtml",
+              "ViewState": "AgIAAEUAAAAAAAAAAAAIwIMAAAAwAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-06-05T08:18:43.885Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "ImportService.cs",
+              "DocumentMoniker": "E:\\ProjectCV\\shoes-ecommerce\\SoleKingECommerce\\SoleKingECommerce\\Services\\Implementations\\ImportService.cs",
+              "RelativeDocumentMoniker": "SoleKingECommerce\\Services\\Implementations\\ImportService.cs",
+              "ToolTip": "E:\\ProjectCV\\shoes-ecommerce\\SoleKingECommerce\\SoleKingECommerce\\Services\\Implementations\\ImportService.cs",
+              "RelativeToolTip": "SoleKingECommerce\\Services\\Implementations\\ImportService.cs",
+              "ViewState": "AgIAANMAAAAAAAAAAAAAAO0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-06T01:17:26.032Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,108 @@
+﻿@model SoleKingECommerce.ViewModels.Import.ImportDetailsViewModel
+@{
+    ViewData["Title"] = "Chi tiết phiếu nhập hàng #" + Model.Id.ToString("D5");
+    Layout = "_AdminLayout";
+}
+
+<div class="page-header">
+    <a asp-action="Index" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left"></i> Quay lại
+    </a>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Thông tin nhập hàng</h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Nhà cung cấp:</label>
+                    <p>@Model.SupplierName</p>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Điện thoại:</label>
+                    <p>@Model.SupplierPhone</p>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Email:</label>
+                    <p>@Model.SupplierEmail</p>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Ghi chú:</label>
+                    <p>@(Model.Note ?? "-")</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Thông tin khác</h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Người nhập:</label>
+                    <p>@Model.UserName</p>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Ngày nhập:</label>
+                    <p>@Model.CreatedAt.ToString("dd/MM/yyyy HH:mm")</p>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Tổng tiền:</label>
+                    <p class="text-danger fw-bold fs-4">@Model.TotalPrice.ToString("N0")đ</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">Danh sách sản phẩm</h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Tên sản phẩm</th>
+                        <th>Thương hiệu</th>
+                        <th>Danh mục</th>
+                        <th>Màu</th>
+                        <th>Size</th>
+                        <th class="text-end">Số lượng</th>
+                        <th class="text-end">Đơn giá</th>
+                        <th class="text-end">Thành tiền</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var (item, index) in Model.Items.Select((item, index) => (item, index + 1)))
+                    {
+                        <tr>
+                            <td>@index</td>
+                            <td>@item.ProductName</td>
+                            <td>@item.Brand</td>
+                            <td>@item.CategoryName</td>
+                            <td>@item.ColorName</td>
+                            <td>@item.Size</td>
+                            <td class="text-end">@item.Quantity</td>
+                            <td class="text-end">@item.Price.ToString("N0")đ</td>
+                            <td class="text-end fw-bold">@item.TotalPrice.ToString("N0")đ</td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="8" class="text-end fw-bold">Tổng cộng:</td>
+                        <td class="text-end fw-bold text-danger">@Model.TotalPrice.ToString("N0")đ</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
