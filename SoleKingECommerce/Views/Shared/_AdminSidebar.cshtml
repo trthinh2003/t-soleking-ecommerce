@@ -85,11 +85,14 @@
             <i class="fas fa-fw fa-angle-right ml-auto" id="stocks-arrow"></i>
         </div>
         <div class="menu-dropdown" id="stocks-dropdown">
+            <a asp-controller="Suppliers" asp-action="Index" class="dropdown-item">
+                <span>Quản lý nhà cung cấp</span>
+            </a>
             <a asp-controller="Imports" asp-action="Index" class="dropdown-item">
                 <span>Quản lý nhập hàng</span>
             </a>
-            <a asp-controller="Suppliers" asp-action="Index" class="dropdown-item">
-                <span>Quản lý nhà cung cấp</span>
+            <a asp-controller="Imports" asp-action="History" class="dropdown-item">
+                <span>Lịch sử nhập hàng</span>
             </a>
         </div>
 

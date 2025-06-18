@@ -3,6 +3,7 @@
     public class ImportDetailsViewModel
     {
         public int Id { get; set; }
+        public int SupplierId { get; set; }
         public string SupplierName { get; set; } = string.Empty;
         public string SupplierPhone { get; set; } = string.Empty;
         public string SupplierEmail { get; set; } = string.Empty;

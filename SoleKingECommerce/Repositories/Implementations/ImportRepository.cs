@@ -24,6 +24,16 @@ namespace SoleKingECommerce.Repositories.Implementations
                 .ToListAsync();
         }
 
+        public IQueryable<Import> GetQueryable()
+        {
+            return _context.Imports
+                .Include(i => i.Supplier)
+                .Include(i => i.User)
+                .Include(i => i.Items)
+                .OrderByDescending(i => i.CreatedAt)
+                .AsQueryable();
+        }
+
         public async Task<Import?> GetByIdAsync(int id)
         {
             return await _context.Imports

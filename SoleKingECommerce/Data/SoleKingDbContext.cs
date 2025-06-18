@@ -30,6 +30,8 @@ namespace SoleKingECommerce.Data
         public DbSet<Supplier> Suppliers { get; set; }
         public DbSet<Import> Imports { get; set; }
         public DbSet<ImportItem> ImportItems { get; set; }
+        public DbSet<ImportReference> ImportReferences { get; set; }
+        public DbSet<ImportReferenceItem> ImportReferenceItems { get; set; }
         public DbSet<Wishlist> Wishlists { get; set; }
         public DbSet<Post> Posts { get; set; }
 
@@ -400,6 +402,30 @@ namespace SoleKingECommerce.Data
             modelBuilder.Entity<UserProductRecommendation>()
                 .Property(r => r.Score)
                 .HasColumnType("decimal(10,4)"); // Accumulated score có thể > 1
+            #endregion
+
+            #region Bổ sung thêm cho nhập hàng
+            modelBuilder.Entity<ImportReference>()
+                .HasOne(ir => ir.FromImport)
+                .WithMany()
+                .HasForeignKey(ir => ir.FromImportId)
+                .OnDelete(DeleteBehavior.Restrict); // tránh xóa lan truyền
+
+            modelBuilder.Entity<ImportReference>()
+                .HasOne(ir => ir.ToImport)
+                .WithMany()
+                .HasForeignKey(ir => ir.ToImportId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ImportReferenceItem>()
+                .HasOne(iri => iri.ImportReference)
+                .WithMany(ir => ir.Items)
+                .HasForeignKey(iri => iri.ImportReferenceId);
+
+            modelBuilder.Entity<ImportReferenceItem>()
+                .HasOne(iri => iri.ProductVariant)
+                .WithMany()
+                .HasForeignKey(iri => iri.ProductVariantId);
             #endregion
         }
     }

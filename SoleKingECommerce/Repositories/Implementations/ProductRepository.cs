@@ -63,5 +63,12 @@ namespace SoleKingECommerce.Repositories.Implementations
         {
             return await _context.Suppliers.OrderBy(s => s.Name).ToListAsync();
         }
+
+        public async Task<Product> UpdateAsync(Product product)
+        {
+            _context.Products.Update(product);
+            await _context.SaveChangesAsync();
+            return product;
+        }
     }
 }

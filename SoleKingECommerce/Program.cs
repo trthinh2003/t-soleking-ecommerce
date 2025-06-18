@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SoleKingECommerce.Configurations;
 using SoleKingECommerce.Data;
@@ -32,9 +33,7 @@ namespace SoleKingECommerce
             builder.Services.AddDbContext<SoleKingDbContext>(options =>
             {
                 string connectionString = builder.Configuration.GetConnectionString("StrConnection")!;
-                //options.UseSqlServer(connectionString);
                 options.UseSqlServer(connectionString);
-                Console.WriteLine($"Connection string: '{connectionString}'");
             });
 
             // Repositories & Services
@@ -49,6 +48,8 @@ namespace SoleKingECommerce
             builder.Services.AddScoped<IColorService, ColorService>();
             builder.Services.AddScoped<ISupplierService, SupplierService>();
             builder.Services.AddScoped<IImportService, ImportService>();
+
+            builder.Services.AddSingleton<ILocalStorageService, LocalStorageService>(); // Dành cho upload file
 
             //Identity
             builder.Services.AddIdentity<User, IdentityRole>()
@@ -92,6 +93,11 @@ namespace SoleKingECommerce
             //Dịch vụ send mail
             builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
             builder.Services.AddTransient<IEmailSenderService, SendMailService>();
+
+            builder.Services.Configure<FormOptions>(options =>
+            {
+                options.MultipartBodyLengthLimit = 52428800; // 50MB
+            });
 
             var app = builder.Build();
 

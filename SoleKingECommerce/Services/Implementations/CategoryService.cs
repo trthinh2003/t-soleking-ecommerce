@@ -97,6 +97,34 @@ namespace SoleKingECommerce.Services.Implementations
             };
         }
 
+        public async Task<IEnumerable<object>> GetLeafCategoriesWithParentNamesAsync()
+        {
+            var allCategories = await GetAllCategoriesAsync();
+
+            var categoryDict = allCategories.ToDictionary(c => c.Id);
+
+            var result = new List<object>();
+
+            foreach (var category in allCategories)
+            {
+                bool isLeaf = !allCategories.Any(c => c.ParentId == category.Id);
+
+                if (isLeaf && category.ParentId.HasValue)
+                {
+                    if (categoryDict.TryGetValue(category.ParentId.Value, out var parentCategory))
+                    {
+                        result.Add(new
+                        {
+                            Id = category.Id,
+                            Name = $"{parentCategory.Name} - {category.Name}"
+                        });
+                    }
+                }
+            }
+
+            return result;
+        }
+
         public async Task CreateCategoryAsync(CategoryViewModel model)
         {
             var category = new Category

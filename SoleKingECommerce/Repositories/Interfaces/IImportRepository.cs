@@ -5,6 +5,7 @@ namespace SoleKingECommerce.Repositories.Interfaces
     public interface IImportRepository
     {
         Task<IEnumerable<Import>> GetAllAsync();
+        IQueryable<Import> GetQueryable();
         Task<Import?> GetByIdAsync(int id);
         Task<Import> CreateAsync(Import import);
         Task<Import> UpdateAsync(Import import);

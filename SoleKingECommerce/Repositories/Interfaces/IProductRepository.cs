@@ -8,6 +8,7 @@ namespace SoleKingECommerce.Repositories.Interfaces
         Task<Product> CreateAsync(Product product);
         Task<ProductVariant?> GetVariantAsync(int productId, int colorId, string size);
         Task<ProductVariant> CreateVariantAsync(ProductVariant variant);
+        Task<Product> UpdateAsync(Product product);
         Task<ProductVariant> UpdateVariantAsync(ProductVariant variant);
         Task<IEnumerable<Category>> GetCategoriesAsync();
         Task<IEnumerable<Color>> GetColorsAsync();
