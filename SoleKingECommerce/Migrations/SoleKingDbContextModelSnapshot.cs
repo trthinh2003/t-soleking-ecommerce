@@ -379,6 +379,61 @@ namespace SoleKingECommerce.Migrations
                     b.ToTable("ImportItems");
                 });
 
+            modelBuilder.Entity("SoleKingECommerce.Models.ImportReference", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("FromImportId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ToImportId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FromImportId");
+
+                    b.HasIndex("ToImportId");
+
+                    b.ToTable("ImportReferences");
+                });
+
+            modelBuilder.Entity("SoleKingECommerce.Models.ImportReferenceItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ImportReferenceId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Note")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ProductVariantId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("QuantityAdded")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ImportReferenceId");
+
+                    b.HasIndex("ProductVariantId");
+
+                    b.ToTable("ImportReferenceItems");
+                });
+
             modelBuilder.Entity("SoleKingECommerce.Models.Order", b =>
                 {
                     b.Property<int>("Id")
@@ -1165,6 +1220,44 @@ namespace SoleKingECommerce.Migrations
                     b.Navigation("ProductVariant");
                 });
 
+            modelBuilder.Entity("SoleKingECommerce.Models.ImportReference", b =>
+                {
+                    b.HasOne("SoleKingECommerce.Models.Import", "FromImport")
+                        .WithMany()
+                        .HasForeignKey("FromImportId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("SoleKingECommerce.Models.Import", "ToImport")
+                        .WithMany()
+                        .HasForeignKey("ToImportId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("FromImport");
+
+                    b.Navigation("ToImport");
+                });
+
+            modelBuilder.Entity("SoleKingECommerce.Models.ImportReferenceItem", b =>
+                {
+                    b.HasOne("SoleKingECommerce.Models.ImportReference", "ImportReference")
+                        .WithMany("Items")
+                        .HasForeignKey("ImportReferenceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SoleKingECommerce.Models.ProductVariant", "ProductVariant")
+                        .WithMany()
+                        .HasForeignKey("ProductVariantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ImportReference");
+
+                    b.Navigation("ProductVariant");
+                });
+
             modelBuilder.Entity("SoleKingECommerce.Models.Order", b =>
                 {
                     b.HasOne("SoleKingECommerce.Models.User", "User")
@@ -1418,6 +1511,11 @@ namespace SoleKingECommerce.Migrations
                 });
 
             modelBuilder.Entity("SoleKingECommerce.Models.Import", b =>
+                {
+                    b.Navigation("Items");
+                });
+
+            modelBuilder.Entity("SoleKingECommerce.Models.ImportReference", b =>
                 {
                     b.Navigation("Items");
                 });

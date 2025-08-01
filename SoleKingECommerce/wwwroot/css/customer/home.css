@@ -1,0 +1,153 @@
+﻿.category-card {
+	border: none;
+	border-radius: 0.8rem;
+	overflow: hidden;
+	transition: var(--transition);
+	box-shadow: var(--shadow-sm);
+}
+
+	.category-card:hover {
+		transform: translateY(-5px);
+		box-shadow: var(--shadow-lg);
+	}
+
+.category-image-container {
+	position: relative;
+	height: 200px;
+	overflow: hidden;
+}
+
+.category-img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	transition: var(--transition);
+}
+
+.category-overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: rgba(0, 0, 0, 0.6);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	opacity: 0;
+	transition: var(--transition);
+}
+
+.category-card:hover .category-overlay {
+	opacity: 1;
+}
+
+.category-info {
+	text-align: center;
+	color: white;
+}
+
+.category-title {
+	font-size: 1.2rem;
+	margin-bottom: 0.5rem;
+}
+
+.category-count {
+	font-size: 0.9rem;
+	margin-bottom: 1rem;
+}
+
+.blog-card {
+	border: none;
+	border-radius: 0.8rem;
+	overflow: hidden;
+	transition: var(--transition);
+	box-shadow: var(--shadow-sm);
+}
+
+	.blog-card:hover {
+		transform: translateY(-5px);
+		box-shadow: var(--shadow-lg);
+	}
+
+.blog-image-container {
+	position: relative;
+	height: 200px;
+	overflow: hidden;
+}
+
+.blog-img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	transition: var(--transition);
+}
+
+.blog-card:hover .blog-img {
+	transform: scale(1.05);
+}
+
+.blog-date {
+	position: absolute;
+	top: 15px;
+	right: 15px;
+	background: var(--primary-color);
+	color: white;
+	padding: 0.5rem;
+	border-radius: 0.5rem;
+	text-align: center;
+	font-size: 0.8rem;
+	font-weight: 600;
+}
+
+	.blog-date .day {
+		display: block;
+		font-size: 1.2rem;
+		line-height: 1;
+	}
+
+	.blog-date .month {
+		display: block;
+		font-size: 0.7rem;
+		margin-top: 0.2rem;
+	}
+
+.stats-section {
+	background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+	padding: 3rem 0;
+	border-radius: 1rem;
+	margin: 3rem 0;
+}
+
+.stat-card {
+	color: white;
+	text-align: center;
+}
+
+.stat-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+	opacity: 0.8;
+}
+
+.stat-number {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-bottom: 0.5rem;
+}
+
+.stat-label {
+	font-size: 1.1rem;
+	opacity: 0.9;
+}
+
+.fade-in {
+	opacity: 0;
+	transform: translateY(20px);
+	transition: all 0.6s ease-out;
+}
+
+	.fade-in.fade-in {
+		opacity: 1;
+		transform: translateY(0);
+	}

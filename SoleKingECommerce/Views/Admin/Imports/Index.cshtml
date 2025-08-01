@@ -1,64 +1,77 @@
-﻿@model IEnumerable<SoleKingECommerce.ViewModels.Import.ImportListViewModel>
+﻿@using SoleKingECommerce.Helpers
+@using SoleKingECommerce.ViewModels.Import
+@model PaginatedList<ImportListViewModel>
 @{
     ViewData["Title"] = "Quản lý Nhập hàng";
     Layout = "_AdminLayout";
 }
 
+@if (TempData["ErrorMessage"] != null || TempData["SuccessMessage"] != null)
+{
+    <span id="error-message" data-msg="@TempData["ErrorMessage"]"></span>
+    <span id="success-message" data-msg="@TempData["SuccessMessage"]"></span>
+}
+
 <div class="page-header flex-row">
-    <form method="get" asp-action="Index" class="d-flex align-items-center w-75" style="gap: 1rem;">
-        <input type="text"
-               name="searchString"
-               value="@ViewData["CurrentFilter"]"
-               class="form-control"
-               placeholder="Tìm kiếm phiếu nhập..."
-               style="max-width: 300px;" />
+    <form method="get" asp-action="Index" class="d-flex align-items-center flex-wrap gap-2 w-100">
+        <div class="search-group">
+            <input type="text"
+                   name="searchString"
+                   value="@ViewData["CurrentFilter"]"
+                   class="form-control"
+                   placeholder="Tìm theo nhà cung cấp..."
+                   aria-label="Tìm kiếm" />
+        </div>
 
-        <select name="supplierId" class="form-control" style="max-width: 250px;">
-            <option value="">-- Tất cả nhà cung cấp --</option>
-            @foreach (var supplier in ViewBag.Suppliers)
-            {
-                <option value="@supplier.Id" selected="@(ViewData["CurrentSupplierId"]?.ToString() == supplier.Id.ToString())">@supplier.Name</option>
-            }
-        </select>
+        <div class="search-group">
+            <select name="supplierId" class="form-control" aria-label="Chọn nhà cung cấp" style="height: 40px;">
+                <option value="">-- Tất cả nhà cung cấp --</option>
+                @foreach (var supplier in ViewBag.Suppliers)
+                {
+                    <option value="@supplier.Id" selected="@(ViewData["CurrentSupplierId"]?.ToString() == supplier.Id.ToString())">
+                        @supplier.Name
+                    </option>
+                }
+            </select>
+        </div>
 
-        <input type="date" name="fromDate" value="@ViewData["CurrentFromDate"]" class="form-control" style="max-width: 150px;" />
-        <input type="date" name="toDate" value="@ViewData["CurrentToDate"]" class="form-control" style="max-width: 150px;" />
+        <div class="date-group d-flex align-items-center gap-2">
+            <div class="search-group">
+                <input type="date" name="fromDate" value="@ViewData["CurrentFromDate"]"
+                       class="form-control" aria-label="Từ ngày" />
+            </div>
+            <span class="text-muted">đến</span>
+            <div class="search-group">
+                <input type="date" name="toDate" value="@ViewData["CurrentToDate"]"
+                       class="form-control" aria-label="Đến ngày" />
+            </div>
+        </div>
 
-        <button type="submit" class="btn btn-outline-primary">
-            <i class="fas fa-search"></i> <span class="d-none d-md-inline text-nowrap">Tìm kiếm</span>
-        </button>
+        <div class="search-group">
+            <button type="submit" class="btn btn-outline-primary" aria-label="Tìm kiếm">
+                <i class="fas fa-search"></i> <span class="d-none d-md-inline">Tìm kiếm</span>
+            </button>
+        </div>
+
+        <div class="ms-auto">
+            <a asp-action="Create" class="btn btn-primary" aria-label="Thêm mới">
+                <i class="fas fa-plus"></i> <span class="d-none d-md-inline">Thêm mới</span>
+            </a>
+        </div>
     </form>
-    <a asp-action="Create" class="btn btn-primary">
-        <i class="fas fa-plus"></i> <span class="d-none d-md-inline">Nhập hàng</span>
-    </a>
 </div>
-
-@if (TempData["ErrorMessage"] != null)
-{
-    <div class="alert alert-danger">
-        @TempData["ErrorMessage"]
-    </div>
-}
-
-@if (TempData["SuccessMessage"] != null)
-{
-    <div class="alert alert-success">
-        @TempData["SuccessMessage"]
-    </div>
-}
 
 <div class="card">
     <div class="card-body overflow-auto">
-        <table class="table">
+        <table class="table table-hover table-striped table-responsive">
             <thead>
                 <tr>
                     <th>Mã phiếu</th>
                     <th>Nhà cung cấp</th>
+                    <th class="text-center" style="width: 1%;">Số lượng SP</th>
                     <th class="text-end">Tổng tiền</th>
-                    <th class="text-center">Số lượng SP</th>
-                    <th>Ghi chú</th>
-                    <th>Người nhập</th>
-                    <th class="text-center">Ngày nhập</th>
+                    <th>Người tạo</th>
+                    <th>Ngày tạo</th>
                     <th class="text-center">Hành động</th>
                 </tr>
             </thead>
@@ -66,16 +79,15 @@
                 @foreach (var item in Model)
                 {
                     <tr>
-                        <td>#@item.Id.ToString("D5")</td>
+                        <td class="fw-bold">#@item.Id</td>
                         <td>@item.SupplierName</td>
-                        <td class="text-end fw-bold">@item.TotalPrice.ToString("N0")đ</td>
                         <td class="text-center">@item.TotalItems</td>
-                        <td>@(item.Note?.Length > 30 ? item.Note.Substring(0, 30) + "..." : item.Note ?? "-")</td>
+                        <td class="text-end">@item.TotalPrice.ToString("N0") đ</td>
                         <td>@item.UserName</td>
-                        <td class="text-center">@item.CreatedAt.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td>@item.CreatedAt.ToString("dd/MM/yyyy HH:mm")</td>
                         <td class="text-center">
                             <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info">
-                                <i class="fas fa-eye"></i>
+                                <i class="fas fa-info-circle"></i>
                             </a>
                             <button type="button" class="btn btn-sm btn-outline-danger delete-btn" data-id="@item.Id">
                                 <i class="fas fa-trash-alt"></i>
@@ -88,12 +100,167 @@
     </div>
 </div>
 
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+    var maxVisiblePages = 3;
+    var totalPages = Model.TotalPages;
+    var currentPage = Model.PageIndex;
+}
+
+<div class="d-flex justify-content-center mt-3">
+    <nav>
+        <ul class="pagination">
+            <!-- First Page -->
+            <li class="page-item @prevDisabled">
+                <a asp-action="Index"
+                   asp-route-pageNumber="1"
+                   asp-route-searchString="@ViewData["CurrentFilter"]"
+                   asp-route-supplierId="@ViewData["CurrentSupplierId"]"
+                   asp-route-fromDate="@ViewData["CurrentFromDate"]"
+                   asp-route-toDate="@ViewData["CurrentToDate"]"
+                   class="page-link">
+                    &laquo;&laquo;
+                </a>
+            </li>
+
+            <!-- Previous Page -->
+            <li class="page-item @prevDisabled">
+                <a asp-action="Index"
+                   asp-route-pageNumber="@(Model.PageIndex - 1)"
+                   asp-route-searchString="@ViewData["CurrentFilter"]"
+                   asp-route-supplierId="@ViewData["CurrentSupplierId"]"
+                   asp-route-fromDate="@ViewData["CurrentFromDate"]"
+                   asp-route-toDate="@ViewData["CurrentToDate"]"
+                   class="page-link">
+                    &laquo;
+                </a>
+            </li>
+
+            @{
+                var startPage = Math.Max(1, currentPage - maxVisiblePages);
+                var endPage = Math.Min(totalPages, currentPage + maxVisiblePages);
+
+                if (startPage > 1)
+                {
+                    <li class="page-item @(1 == currentPage ? "active" : "")">
+                        <a asp-action="Index"
+                           asp-route-pageNumber="1"
+                           asp-route-searchString="@ViewData["CurrentFilter"]"
+                           asp-route-supplierId="@ViewData["CurrentSupplierId"]"
+                           asp-route-fromDate="@ViewData["CurrentFromDate"]"
+                           asp-route-toDate="@ViewData["CurrentToDate"]"
+                           class="page-link">
+                            1
+                        </a>
+                    </li>
+
+                    if (startPage > 2)
+                    {
+                        <li class="page-item disabled">
+                            <span class="page-link">...</span>
+                        </li>
+                    }
+                }
+
+                for (int i = startPage; i <= endPage; i++)
+                {
+                    if (i == 1 && startPage > 1) continue;
+
+                    <li class="page-item @(i == currentPage ? "active" : "")">
+                        <a asp-action="Index"
+                           asp-route-pageNumber="@i"
+                           asp-route-searchString="@ViewData["CurrentFilter"]"
+                           asp-route-supplierId="@ViewData["CurrentSupplierId"]"
+                           asp-route-fromDate="@ViewData["CurrentFromDate"]"
+                           asp-route-toDate="@ViewData["CurrentToDate"]"
+                           class="page-link">
+                            @i
+                        </a>
+                    </li>
+                }
+
+                if (endPage < totalPages)
+                {
+                    if (endPage < totalPages - 1)
+                    {
+                        <li class="page-item disabled">
+                            <span class="page-link">...</span>
+                        </li>
+                    }
+
+                    <li class="page-item @(totalPages == currentPage ? "active" : "")">
+                        <a asp-action="Index"
+                           asp-route-pageNumber="@totalPages"
+                           asp-route-searchString="@ViewData["CurrentFilter"]"
+                           asp-route-supplierId="@ViewData["CurrentSupplierId"]"
+                           asp-route-fromDate="@ViewData["CurrentFromDate"]"
+                           asp-route-toDate="@ViewData["CurrentToDate"]"
+                           class="page-link">
+                            @totalPages
+                        </a>
+                    </li>
+                }
+            }
+
+            <!-- Next Page -->
+            <li class="page-item @nextDisabled">
+                <a asp-action="Index"
+                   asp-route-pageNumber="@(Model.PageIndex + 1)"
+                   asp-route-searchString="@ViewData["CurrentFilter"]"
+                   asp-route-supplierId="@ViewData["CurrentSupplierId"]"
+                   asp-route-fromDate="@ViewData["CurrentFromDate"]"
+                   asp-route-toDate="@ViewData["CurrentToDate"]"
+                   class="page-link">
+                    &raquo;
+                </a>
+            </li>
+
+            <!-- Last Page -->
+            <li class="page-item @nextDisabled">
+                <a asp-action="Index"
+                   asp-route-pageNumber="@Model.TotalPages"
+                   asp-route-searchString="@ViewData["CurrentFilter"]"
+                   asp-route-supplierId="@ViewData["CurrentSupplierId"]"
+                   asp-route-fromDate="@ViewData["CurrentFromDate"]"
+                   asp-route-toDate="@ViewData["CurrentToDate"]"
+                   class="page-link">
+                    &raquo;&raquo;
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+@section styles {
+    <link href="~/css/admin/import-index.css" rel="stylesheet" />
+}
+
 @section Scripts {
     <script>
         $(document).ready(function () {
+            //Xử lý các thông báo trả về
+            var successMessage = $('#success-message').data('msg');
+            var errorMessage = $('#error-message').data('msg');
+            if (successMessage != null) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Thành công',
+                    text: successMessage
+                });
+            } else if (errorMessage != null) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Lỗi',
+                    text: errorMessage
+                });
+            }
+
             $('.delete-btn').click(function (e) {
                 e.preventDefault();
                 var id = $(this).data('id');
+                var url = '@Url.Action("Delete", "Imports")';
+                var token = $('input[name="__RequestVerificationToken"]').val();
 
                 Swal.fire({
                     title: 'Xác nhận xóa',
@@ -107,9 +274,12 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            url: '@Url.Action("Delete", "Imports")',
+                            url: url,
                             type: 'POST',
-                            data: { id: id },
+                            data: {
+                                __RequestVerificationToken: token,
+                                id: id
+                            },
                             success: function (response) {
                                 if (response.success) {
                                     Swal.fire({
@@ -129,7 +299,7 @@
                                     });
                                 }
                             },
-                            error: function () {
+                            error: function (xhr) {
                                 Swal.fire({
                                     title: 'Lỗi!',
                                     text: 'Có lỗi xảy ra khi kết nối đến server',
@@ -142,7 +312,7 @@
                 });
             });
 
-            // Auto-hide alerts after 3 seconds
+            // Tự động ẩn thông báo sau 3 giây
             setTimeout(function () {
                 $('.alert').fadeOut('slow');
             }, 3000);

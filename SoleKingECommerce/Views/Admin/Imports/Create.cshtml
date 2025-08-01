@@ -21,7 +21,55 @@
     </div>
 }
 
-<form asp-action="Create" id="importForm" class="import-form">
+<!-- Modal thông số -->
+<div class="modal fade" id="specModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Nhập thông số sản phẩm</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label">Màu sắc:</label>
+                    <select class="form-select" id="modalColorSelect">
+                        <option value="">-- Chọn màu --</option>
+                        @foreach (var color in ViewBag.Colors as IEnumerable<SoleKingECommerce.Models.Color>)
+                        {
+                            <option value="@color.Id" data-name="@color.Name" data-hex="@color.Hex">
+                                <div class="d-flex align-items-center">
+                                    <div class="color-square me-2" style="width: 15px; height: 15px; background-color: @color.Hex; display: inline-block;"></div>
+                                    @color.Name (@color.Hex)
+                                </div>
+                            </option>
+                        }
+                    </select>
+                    <!-- Hiển thị preview màu -->
+                    <div class="color-preview mt-2" id="mainColorPreview" style="display: none;">
+                        <div class="d-flex align-items-center">
+                            <div class="color-square me-2" id="mainColorSquare" style="width: 25px; height: 25px; border: 1px solid #ccc; border-radius: 4px;"></div>
+                            <span id="mainColorInfo" class="fw-bold"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Size:</label>
+                    <input type="text" class="form-control" id="modalSizeInput">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Số lượng:</label>
+                    <input type="number" class="form-control" id="modalQuantityInput" min="1" value="1">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-primary" id="confirmSpec">Xác nhận</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<form asp-action="Create" id="importForm" class="import-form" method="post" enctype="multipart/form-data">
     <div class="row g-4">
         <div class="col-lg-4">
             <div class="card card-info">
@@ -66,6 +114,7 @@
                     <div id="productItemsContainer" class="product-items-container">
                         @for (int i = 0; i < Model.Items.Count; i++)
                         {
+                            Model.Items[i].Index = i;
                             <partial name="_ImportItemPartial" model="Model.Items[i]" />
                         }
                     </div>
@@ -76,7 +125,7 @@
                             <span class="amount" id="totalPrice">0</span>
                             <span class="currency">đ</span>
                         </div>
-                        <button type="submit" class="btn btn-primary btn-save">
+                        <button type="submit" class="btn btn-success btn-save">
                             <i class="fas fa-save me-2"></i>Lưu phiếu nhập
                         </button>
                     </div>
@@ -97,7 +146,7 @@
 
     <script>
         $(document).ready(function () {
-            // Initialize Select2
+            // Gán Select2
             $('.select2').select2({
                 placeholder: "-- Chọn nhà cung cấp --",
                 width: '100%'
@@ -105,7 +154,7 @@
 
             let itemIndex = @Model.Items.Count;
 
-            // Add new product item
+            // Thêm mới 1 product item khi click vào btn "Thêm sản phẩm"
             $('#addProductBtn').click(function() {
                 $.ajax({
                     url: '@Url.Action("AddImportItem", "Imports")',
@@ -116,7 +165,7 @@
                         updateTotalPrice();
                         itemIndex++;
 
-                        // Initialize Select2 for new dropdowns
+                        // Gán Select2 cho các dropdown mới
                         $('.product-item:last-child .form-select').select2({
                             width: '100%'
                         });
@@ -127,7 +176,7 @@
                 });
             });
 
-            // Remove product item
+            // Loại bỏ product item
             $(document).on('click', '.remove-item-btn', function() {
                 var $item = $(this).closest('.product-item');
                 $item.fadeOut(300, function() {
@@ -137,28 +186,69 @@
                 });
             });
 
-            // Re-index items to ensure correct form binding
+            // Xử lý chọn màu
+            $('#modalColorSelect').change(function() {
+                const selectedOption = $(this).find('option:selected');
+                const colorHex = selectedOption.data('hex');
+                const colorName = selectedOption.data('name');
+
+                if (colorHex) {
+                    $('#mainColorSquare').css('background-color', colorHex);
+                    $('#mainColorInfo').text(colorHex + (colorName ? ` (${colorName})` : ''));
+                    $('#mainColorPreview').show();
+                } else {
+                    $('#mainColorPreview').hide();
+                }
+            });
+
+            // Re-index items để đảm bảo form binding hiển thị đúng
             function reindexItems() {
                 $('.product-item').each(function(index) {
                     var $item = $(this);
 
-                    // Update all input, select, textarea elements
-                    $item.find('input, select, textarea').each(function() {
+                    // Update các ô input - TRỪ các file input
+                    $item.find('input:not([type="file"]), select, textarea').each(function() {
                         var $element = $(this);
                         var name = $element.attr('name');
                         var id = $element.attr('id');
 
                         if (name && name.includes('Items[')) {
-                            // Replace Items[oldIndex] with Items[newIndex]
-                            var newName = name.replace(/Items\[\d+\]/, 'Items[' + index + ']');
-                            $element.attr('name', newName);
+                            if (!name.includes('.Specifications[')) {
+                                var newName = name.replace(/Items\[\d+\]/, 'Items[' + index + ']');
+                                $element.attr('name', newName);
+                            }
                         }
 
                         if (id && id.includes('Items_')) {
-                            // Replace Items_oldIndex__ with Items_newIndex__
                             var newId = id.replace(/Items_\d+__/, 'Items_' + index + '__');
                             $element.attr('id', newId);
                         }
+                    });
+
+                    // Xử lý các file input
+                    $item.find('input[type="file"]').each(function() {
+                        var $fileInput = $(this);
+                        var name = $fileInput.attr('name');
+                        var dataIndex = $fileInput.attr('data-index');
+
+                        if (name && name.includes('Items[')) {
+                            var newName = name.replace(/Items\[\d+\]/, 'Items[' + index + ']');
+                            $fileInput.attr('name', newName);
+                        }
+
+                        // Update data-index
+                        $fileInput.attr('data-index', index);
+
+                        // Update corresponding preview container ID
+                        var $previewContainer = $item.find('.image-preview-container');
+                        if ($previewContainer.length) {
+                            $previewContainer.attr('id', 'imagePreviewContainer-' + index);
+                        }
+                    });
+
+                    // Reindex specifications
+                    $item.find('.spec-item').each(function(specIndex) {
+                        $(this).find('input[type="hidden"]').attr('name', `Items[${index}].Specifications[${specIndex}]`);
                     });
 
                     // Update product number display
@@ -169,31 +259,54 @@
                 });
             }
 
-            // Calculate total price when quantity or price changes
+            //Tính toán "Thành tiền" và "Tổng giá trị" khi quantity hoặc price thay đổi
             $(document).on('input', '.quantity-input, .price-input', function() {
                 updateItemTotal($(this).closest('.product-item'));
                 updateTotalPrice();
             });
 
-            // Update total price initially
             updateTotalPrice();
-
+            // Cập nhật "Tổng giá trị" cho mỗi item
             function updateItemTotal(item) {
-                const quantity = parseFloat(item.find('.quantity-input').val()) || 0;
                 const price = parseFloat(item.find('.price-input').val()) || 0;
-                const total = quantity * price;
+                let totalQuantity = 0;
+
+                // Tính tổng quantity từ các specification
+                item.find('.spec-item input[type="hidden"]').each(function() {
+                    const parts = $(this).val().split('-');
+                    if (parts.length >= 3) {
+                        totalQuantity += parseInt(parts[2]) || 0;
+                    }
+                });
+
+                const total = price * totalQuantity;
                 item.find('.item-total').text(total.toLocaleString('vi-VN') + 'đ');
+                return total;
             }
 
             function updateTotalPrice() {
-                let total = 0;
+                let grandTotal = 0;
+
                 $('.product-item').each(function() {
-                    const quantity = parseFloat($(this).find('.quantity-input').val()) || 0;
-                    const price = parseFloat($(this).find('.price-input').val()) || 0;
-                    total += quantity * price;
+                    grandTotal += updateItemTotal($(this));
                 });
-                $('#totalPrice').text(total.toLocaleString('vi-VN'));
+
+                $('#totalPrice').text(grandTotal.toLocaleString('vi-VN'));
             }
+
+            // Kích hoạt tính toán khi:
+            // - Giá thay đổi
+            $(document).on('input', '.price-input', function() {
+                updateItemTotal($(this).closest('.product-item'));
+                updateTotalPrice();
+            });
+
+            // - Khi thêm/xóa specification
+            $(document).on('specsUpdated', function(e, item) {
+                updateItemTotal(item);
+                updateTotalPrice();
+            });
+
 
             // Auto-hide alerts after 5 seconds
             setTimeout(function () {
@@ -202,11 +315,165 @@
 
             // Debug: Log form data before submit
             $('#importForm').on('submit', function(e) {
-                console.log('Form data before submit:');
+                console.log('=== FORM SUBMISSION DEBUG ===');
+
                 var formData = new FormData(this);
+                var fileCount = 0;
+
                 for (var pair of formData.entries()) {
-                    console.log(pair[0] + ': ' + pair[1]);
+                    if (pair[0].includes('Images')) {
+                        if (pair[1] instanceof File) {
+                            console.log(`${pair[0]}: FILE - ${pair[1].name}, ${pair[1].size} bytes`);
+                            fileCount++;
+                        } else {
+                            console.log(`${pair[0]}: ${pair[1]}`);
+                        }
+                    }
                 }
+
+                console.log(`Total files in form: ${fileCount}`);
+
+                // Check each file input
+                $('.image-upload').each(function(index) {
+                    const files = this.files;
+                    console.log(`File input ${index}: ${files.length} files`);
+                    for (let i = 0; i < files.length; i++) {
+                        console.log(`  - ${files[i].name} (${files[i].size} bytes)`);
+                    }
+                });
+            });
+
+            $(document).on('click', '.add-spec-btn', function() {
+                $('#specModal').modal('show');
+                $('#specModal').data('productItem', $(this).closest('.product-item'));
+            });
+
+            // Confirm specification selection
+            $('#confirmSpec').click(function() {
+                const productItem = $('#specModal').data('productItem');
+                const colorId = $('#modalColorSelect').val();
+                const colorName = $('#modalColorSelect option:selected').text();
+                const size = $('#modalSizeInput').val().trim();
+                const quantity = $('#modalQuantityInput').val();
+                const index = productItem.data('index');
+
+                if (colorId && size && quantity) {
+                    // Create the display text
+                    const displayText = `Màu: ${colorName} - Size: ${size} - Số lượng: ${quantity}`;
+
+                    // Create the hidden input value
+                    const hiddenValue = `${colorId}-${size}-${quantity}`;
+
+                    // Tính số lượng specifications hiện tại để tạo index đúng
+                    const currentSpecCount = productItem.find('.spec-item').length;
+
+                    // Create the new specification element với index đúng format
+                    const specHtml = `
+                        <div class="spec-item mb-2">
+                            <div class="d-flex align-items-center">
+                                <span class="badge bg-primary me-2">${displayText}</span>
+                                <button type="button" class="btn btn-sm btn-outline-danger remove-spec-btn">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                            <input type="hidden" name="Items[${index}].Specifications[${currentSpecCount}]" value="${hiddenValue}" />
+                        </div>
+                    `;
+
+                    // Append to the specifications container
+                    productItem.find('.specifications-container').append(specHtml);
+
+                    // Close the modal and reset fields
+                    $('#specModal').modal('hide');
+                    $('#modalColorSelect').val('');
+                    $('#modalSizeInput').val('');
+                    $('#modalQuantityInput').val('1');
+
+                    // Update totals
+                    updateItemTotal(productItem);
+                    updateTotalPrice();
+                    $(document).trigger('specsUpdated', [productItem]);
+                } else {
+                    alert('Vui lòng nhập đầy đủ thông tin màu, size và số lượng!');
+                }
+            });
+
+            // Handle removing specifications
+            $(document).on('click', '.remove-spec-btn', function() {
+                const $specItem = $(this).closest('.spec-item');
+                const $productItem = $(this).closest('.product-item');
+                const productIndex = $productItem.data('index');
+
+                $specItem.remove();
+
+                // Reindex specifications
+                $productItem.find('.spec-item').each(function(specIndex) {
+                    $(this).find('input[type="hidden"]').attr('name', `Items[${productIndex}].Specifications[${specIndex}]`);
+                });
+
+                $(document).trigger('specsUpdated', [$productItem]);
+            });
+
+            updateTotalPrice();
+
+            // Xử lý upload ảnh và hiển thị preview
+            $(document).on('change', '.image-upload', function() {
+                const index = $(this).data('index');
+                const container = $(`#imagePreviewContainer-${index}`);
+                container.empty();
+
+                const files = this.files;
+                console.log(`Image upload for item ${index}: ${files.length} files selected`);
+
+                if (files && files.length > 0) {
+                    for (let i = 0; i < files.length; i++) {
+                        const file = files[i];
+                        console.log(`Processing file ${i}: ${file.name}, size: ${file.size}, type: ${file.type}`);
+
+                        const reader = new FileReader();
+
+                        reader.onload = function(e) {
+                            const previewHtml = `
+                                <div class="col-3 col-md-2">
+                                    <div class="image-preview-item" data-file-index="${i}">
+                                        <img src="${e.target.result}" class="img-thumbnail" />
+                                        <button type="button" class="btn btn-sm btn-danger remove-image-btn">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            `;
+                            container.append(previewHtml);
+                        };
+
+                        reader.onerror = function() {
+                            console.error(`Error reading file ${i}: ${file.name}`);
+                        };
+
+                        reader.readAsDataURL(file);
+                    }
+                }
+            });
+
+            // Xử lý xóa ảnh preview
+            $(document).on('click', '.remove-image-btn', function() {
+                const item = $(this).closest('.image-preview-item');
+                const container = item.closest('.image-preview-container');
+                const index = container.attr('id').split('-')[2];
+
+                // Xóa preview
+                item.closest('.col-3').remove();
+
+                // Cập nhật lại input file
+                const input = $(`input.image-upload[data-index="${index}"]`)[0];
+                const files = Array.from(input.files);
+                const itemIndex = container.find('.image-preview-item').index(item);
+                files.splice(itemIndex, 1);
+
+                // Tạo DataTransfer để cập nhật files
+                const dataTransfer = new DataTransfer();
+                files.forEach(file => dataTransfer.items.add(file));
+                input.files = dataTransfer.files;
             });
         });
     </script>

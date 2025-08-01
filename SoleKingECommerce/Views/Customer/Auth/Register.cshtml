@@ -1,0 +1,142 @@
+﻿@using SoleKingECommerce.ViewModels.Auth
+@{
+    ViewData["Title"] = "Đăng ký";
+    ViewData["SubTitle"] = "Tạo tài khoản để khám phá thế giới giày dép";
+    Layout = "_CustomerAuthLayout";
+}
+
+@model RegisterViewModel
+
+<form asp-action="Register" method="post" id="registerForm">
+    <div asp-validation-summary="ModelOnly" class="validation-summary-errors"></div>
+
+    <div class="form-row">
+        <div class="form-group">
+            <label asp-for="FirstName">Họ <span class="text-danger">*</span></label>
+            <input asp-for="FirstName" class="form-control" placeholder="Nhập họ" />
+            <span asp-validation-for="FirstName" class="field-validation-error"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="LastName">Tên <span class="text-danger">*</span></label>
+            <input asp-for="LastName" class="form-control" placeholder="Nhập tên" />
+            <span asp-validation-for="LastName" class="field-validation-error"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Email"><i class="fas fa-envelope px-2"></i>Email <span class="text-danger">*</span></label>
+        <input asp-for="Email" type="email" class="form-control" placeholder="Nhập địa chỉ email" />
+        <span asp-validation-for="Email" class="field-validation-error"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="PhoneNumber"><i class="fas fa-phone px-2"></i>Số điện thoại <span class="text-danger">*</span></label>
+        <input asp-for="PhoneNumber" type="tel" class="form-control" placeholder="Nhập số điện thoại" />
+        <span asp-validation-for="PhoneNumber" class="field-validation-error"></span>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group">
+            <label asp-for="Password"><i class="fas fa-lock px-2"></i>Mật khẩu <span class="text-danger">*</span></label>
+            <input asp-for="Password" type="password" class="form-control" placeholder="Tạo mật khẩu" id="password" />
+            <div class="password-strength" id="passwordStrength"></div>
+            <span asp-validation-for="Password" class="field-validation-error"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="ConfirmPassword"><i class="fas fa-lock px-2"></i>Xác nhận mật khẩu <span class="text-danger">*</span></label>
+            <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Nhập lại mật khẩu" />
+            <span asp-validation-for="ConfirmPassword" class="field-validation-error"></span>
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group">
+            <label asp-for="BirthDate"><i class="fas fa-birthday-cake px-2"></i>Ngày sinh</label>
+            <input asp-for="BirthDate" type="date" class="form-control" />
+            <span asp-validation-for="BirthDate" class="field-validation-error"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Gender"><i class="fas fa-genderless px-2"></i>Giới tính</label>
+            <select asp-for="Gender" class="form-control">
+                <option value="">Chọn giới tính</option>
+                <option value="Male">Nam</option>
+                <option value="Female">Nữ</option>
+                <option value="Other">Khác</option>
+            </select>
+            <span asp-validation-for="Gender" class="field-validation-error"></span>
+        </div>
+    </div>
+
+    <div class="checkbox-group">
+        <input asp-for="AcceptTerms" type="checkbox" />
+        <label asp-for="AcceptTerms">
+            Tôi đồng ý với <a href="#" target="_blank">Điều khoản dịch vụ</a> và <a href="#" target="_blank">Chính sách bảo mật</a> của T-SOLEKING 
+            <span class="text-danger">(*)</span>
+        </label>
+        <span asp-validation-for="AcceptTerms" class="field-validation-error"></span>
+    </div>
+
+    <div class="checkbox-group mb-3">
+        <input asp-for="ReceiveNewsletter" type="checkbox" />
+        <label asp-for="ReceiveNewsletter">
+            Tôi muốn nhận thông tin khuyến mãi và tin tức mới nhất từ T-SOLEKING
+        </label>
+    </div>
+
+    <button type="submit" class="btn-primary" id="registerBtn">Đăng ký tài khoản</button>
+</form>
+
+<div class="auth-links mt-0 pt-0">
+    <p>Đã có tài khoản? <a asp-action="Login">Đăng nhập ngay</a></p>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        // Password strength checker
+        document.getElementById('password').addEventListener('input', function() {
+            const password = this.value;
+            const strengthDiv = document.getElementById('passwordStrength');
+
+            if (password.length === 0) {
+                strengthDiv.textContent = '';
+                return;
+            }
+
+            if (password.length < 6) {
+                strengthDiv.textContent = 'Mật khẩu quá ngắn (tối thiểu 6 ký tự)';
+                strengthDiv.className = 'password-strength strength-weak';
+            } else if (password.length < 8 || !/[A-Z]/.test(password) || !/[0-9]/.test(password)) {
+                strengthDiv.textContent = 'Mật khẩu trung bình (nên có chữ hoa và số)';
+                strengthDiv.className = 'password-strength strength-medium';
+            } else {
+                strengthDiv.textContent = 'Mật khẩu mạnh';
+                strengthDiv.className = 'password-strength strength-strong';
+            }
+        });
+
+        // Phone number formatting
+        document.querySelector('input[name="PhoneNumber"]').addEventListener('input', function() {
+            let value = this.value.replace(/\D/g, '');
+            if (value.length > 10) {
+                value = value.substr(0, 10);
+            }
+            this.value = value;
+        });
+
+        // Form submission handling
+        document.getElementById('registerForm').addEventListener('submit', function() {
+            const registerBtn = document.getElementById('registerBtn');
+            registerBtn.disabled = true;
+            registerBtn.textContent = 'Đang xử lý...';
+
+            // Re-enable button after 5 seconds in case of error
+            setTimeout(() => {
+                registerBtn.disabled = false;
+                registerBtn.textContent = 'Đăng ký tài khoản';
+            }, 5000);
+        });
+    </script>
+}

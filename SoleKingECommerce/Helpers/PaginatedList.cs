@@ -6,11 +6,15 @@ namespace SoleKingECommerce.Helpers
     {
         public int PageIndex { get; private set; }
         public int TotalPages { get; private set; }
+        public int TotalCount { get; private set; }  // Thêm thuộc tính này
+        public int PageSize { get; private set; }    // Thêm thuộc tính này
 
         public PaginatedList(List<T> items, int count, int pageIndex, int pageSize)
         {
             PageIndex = pageIndex;
             TotalPages = (int)Math.Ceiling(count / (double)pageSize);
+            TotalCount = count;      // Lưu tổng số records
+            PageSize = pageSize;     // Lưu kích thước trang
 
             this.AddRange(items);
         }

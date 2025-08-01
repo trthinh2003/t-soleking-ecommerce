@@ -1,0 +1,38 @@
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning",
+      "SoleKingECommerce.Services": "Debug",
+      "SoleKingECommerce.Controllers": "Debug"
+    }
+  },
+  "ConnectionStrings": {
+    "StrConnection": "Server=your_server;Database=your_database;User Id=your_username;Password=your_password;Encrypt=True;Trust Server Certificate=True"
+  },
+  "MailSettings": {
+    "Mail": "your_email",
+    "DisplayName": "SoleKing",
+    "Password": "your_password",
+    "Host": "smtp.gmail.com",
+    "Port": 587
+  },
+  "AllowedHosts": "*",
+  "Vnpay": {
+    "TmnCode": "YOUR_VNPAY_TMNCODE",
+    "HashSecret": "YOUR_VNPAY_HASH_SECRET",
+    "BaseUrl": "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html",
+    "Command": "pay",
+    "CurrCode": "VND",
+    "Version": "2.1.0",
+    "Locale": "vn"
+  },
+  "PaymentCallBack": {
+    "ReturnUrl": "https://localhost:7268"
+  },
+  "TimeZoneId": "SE Asia Standard Time",
+  "Redis": {
+    "ConnectionString": "localhost:6379,abortConnect=false",
+    "InstanceName": "SoleKing_"
+  }
+}

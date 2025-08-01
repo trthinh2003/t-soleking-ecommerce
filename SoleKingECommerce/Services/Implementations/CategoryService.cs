@@ -1,18 +1,23 @@
-﻿using SoleKingECommerce.Helpers;
+﻿using Microsoft.Extensions.Caching.Distributed;
+using SoleKingECommerce.Helpers;
 using SoleKingECommerce.Models;
 using SoleKingECommerce.Repositories.Interfaces;
 using SoleKingECommerce.Services.Interfaces;
 using SoleKingECommerce.ViewModels.Category;
+using System.Text.Json;
 
 namespace SoleKingECommerce.Services.Implementations
 {
     public class CategoryService : ICategoryService
     {
         private readonly ICategoryRepository _categoryRepository;
-
-        public CategoryService(ICategoryRepository categoryRepository)
+        private readonly IDistributedCache _cache;
+        private readonly ILogger<CategoryService> _logger;
+        public CategoryService(ICategoryRepository categoryRepository, IDistributedCache cache, ILogger<CategoryService> logger)
         {
             _categoryRepository = categoryRepository;
+            _cache = cache;
+            _logger = logger;
         }
 
         public async Task<IEnumerable<Category>> GetAllCategoriesAsync()
@@ -97,6 +102,34 @@ namespace SoleKingECommerce.Services.Implementations
             };
         }
 
+        public async Task<IEnumerable<object>> GetLeafCategoriesWithParentNamesAsync()
+        {
+            var allCategories = await GetAllCategoriesAsync();
+
+            var categoryDict = allCategories.ToDictionary(c => c.Id);
+
+            var result = new List<object>();
+
+            foreach (var category in allCategories)
+            {
+                bool isLeaf = !allCategories.Any(c => c.ParentId == category.Id);
+
+                if (isLeaf && category.ParentId.HasValue)
+                {
+                    if (categoryDict.TryGetValue(category.ParentId.Value, out var parentCategory))
+                    {
+                        result.Add(new
+                        {
+                            Id = category.Id,
+                            Name = $"{parentCategory.Name} - {category.Name}"
+                        });
+                    }
+                }
+            }
+
+            return result;
+        }
+
         public async Task CreateCategoryAsync(CategoryViewModel model)
         {
             var category = new Category
@@ -146,6 +179,72 @@ namespace SoleKingECommerce.Services.Implementations
         public async Task<bool> CategoryExistsAsync(int id)
         {
             return await _categoryRepository.ExistsAsync(id);
+        }
+
+        public async Task<IEnumerable<CategoryTreeViewModel>> GetCategoryTreeAsync()
+        {
+            var allCategories = await _categoryRepository.GetAllAsync();
+            var parentCategories = allCategories.Where(c => c.ParentId == null).ToList();
+
+            var tree = new List<CategoryTreeViewModel>();
+
+            foreach (var parent in parentCategories)
+            {
+                var parentNode = new CategoryTreeViewModel
+                {
+                    Id = parent.Id,
+                    Name = parent.Name,
+                    Children = new List<CategoryTreeViewModel>()
+                };
+
+                var children = allCategories.Where(c => c.ParentId == parent.Id).ToList();
+                foreach (var child in children)
+                {
+                    parentNode.Children.Add(new CategoryTreeViewModel
+                    {
+                        Id = child.Id,
+                        Name = child.Name
+                    });
+                }
+
+                tree.Add(parentNode);
+            }
+
+            return tree;
+        }
+
+        public async Task<IEnumerable<CategoryTreeViewModel>> GetCachedCategoryTreeAsync()
+        {
+            var cacheKey = "CategoryTree";
+
+            try
+            {
+                var cachedData = await _cache.GetStringAsync(cacheKey);
+
+                if (!string.IsNullOrEmpty(cachedData))
+                {
+                    _logger.LogInformation("Retrieved category tree from cache");
+                    return JsonSerializer.Deserialize<IEnumerable<CategoryTreeViewModel>>(cachedData);
+                }
+
+                var categoryTree = await GetCategoryTreeAsync();
+                var serializedData = JsonSerializer.Serialize(categoryTree);
+
+                var cacheOptions = new DistributedCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1)
+                };
+
+                await _cache.SetStringAsync(cacheKey, serializedData, cacheOptions);
+                _logger.LogInformation("Stored category tree in cache");
+
+                return categoryTree;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Lỗi khi truy cập Redis, sử dụng dữ liệu trực tiếp từ database");
+                return await GetCategoryTreeAsync();
+            }
         }
     }
 }

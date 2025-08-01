@@ -1,0 +1,624 @@
+﻿@using SoleKingECommerce.ViewModels.Product
+@model ProductEditViewModel
+@{
+    ViewData["Title"] = "Chỉnh sửa Sản phẩm";
+    Layout = "_AdminLayout";
+}
+
+@if (TempData["ErrorMessage"] != null || TempData["SuccessMessage"] != null)
+{
+    <span id="error-message" data-msg="@TempData["ErrorMessage"]"></span>
+    <span id="success-message" data-msg="@TempData["SuccessMessage"]"></span>
+}
+
+<div class="page-header">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-action="Index">Sản phẩm</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Chỉnh sửa</li>
+        </ol>
+    </nav>
+</div>
+
+<form asp-action="Edit" method="post" enctype="multipart/form-data" id="editProductForm">
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.Id)
+
+    <div class="row">
+        <!-- Thông tin cơ bản -->
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Thông tin cơ bản</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label asp-for="Name" class="form-label">Tên sản phẩm <span class="text-danger">*</span></label>
+                                <input asp-for="Name" class="form-control" placeholder="Nhập tên sản phẩm" />
+                                <span asp-validation-for="Name" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label asp-for="Brand" class="form-label">Thương hiệu</label>
+                                <input asp-for="Brand" class="form-control" placeholder="Nhập thương hiệu" />
+                                <span asp-validation-for="Brand" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label asp-for="BasePrice" class="form-label">Giá niêm yết (VNĐ) <span class="text-danger">*</span></label>
+                                <input asp-for="BasePrice" type="number" step="0.01" class="form-control" placeholder="0" />
+                                <span asp-validation-for="BasePrice" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label asp-for="CategoryId" class="form-label">Danh mục <span class="text-danger">*</span></label>
+                                <select asp-for="CategoryId" class="form-control">
+                                    <option value="">-- Chọn danh mục --</option>
+                                    @if (Model.Categories != null)
+                                    {
+                                        @foreach (dynamic category in Model.Categories)
+                                        {
+                                            <option value="@category.Id">@category.Name</option>
+                                        }
+                                    }
+                                </select>
+                                <span asp-validation-for="CategoryId" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Description" class="form-label">Mô tả sản phẩm</label>
+                        <textarea asp-for="Description" class="form-control" rows="4" placeholder="Nhập mô tả chi tiết về sản phẩm"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Tags" class="form-label">Tags</label>
+                        <input asp-for="Tags" class="form-control" placeholder="Nhập tags, cách nhau bằng dấu phẩy" />
+                        <small class="form-text text-muted">Ví dụ: giày thể thao, nike, nam</small>
+                        <span asp-validation-for="Tags" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quản lý ảnh -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Quản lý ảnh sản phẩm</h5>
+                </div>
+                <div class="card-body">
+                    <!-- Ảnh chính -->
+                    <div class="row mb-4">
+                        <div class="col-md-12">
+                            <label class="form-label">Ảnh chính</label>
+                            <div class="current-image-section mb-3">
+                                @if (!string.IsNullOrEmpty(Model.CurrentImageUrl))
+                                {
+                                    <div class="current-image-wrapper">
+                                        <img src="@Model.CurrentImageUrl" alt="Ảnh chính hiện tại" class="img-thumbnail" style="max-width: 200px; max-height: 200px;" />
+                                        <p class="text-muted mt-2">Ảnh chính hiện tại</p>
+                                    </div>
+                                }
+                            </div>
+                            <input type="file" asp-for="MainImage" class="form-control" accept="image/*" />
+                            <small class="form-text text-muted">Chọn ảnh mới để thay thế ảnh chính (Chỉ chấp nhận file ảnh)</small>
+                        </div>
+                    </div>
+
+                    <!-- Ảnh mặt trước và mặt sau -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label class="form-label">Ảnh mặt trước</label>
+                                <input type="file" asp-for="FrontImage" class="form-control" accept="image/*" />
+                                <small class="form-text text-muted">Thêm ảnh mặt trước cho sản phẩm</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label class="form-label">Ảnh mặt sau</label>
+                                <input type="file" asp-for="BackImage" class="form-control" accept="image/*" />
+                                <small class="form-text text-muted">Thêm ảnh mặt sau cho sản phẩm</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ảnh bổ sung -->
+                    <div class="form-group mb-3">
+                        <label class="form-label">Ảnh bổ sung</label>
+                        <input type="file" asp-for="AdditionalImages" class="form-control" accept="image/*" multiple />
+                        <small class="form-text text-muted">Chọn nhiều ảnh bổ sung cho sản phẩm</small>
+                    </div>
+
+                    <!-- Ảnh hiện có -->
+                    @if (Model.ExistingImages != null && Model.ExistingImages.Any())
+                    {
+                        <div class="existing-images mt-4">
+                            <h6>Ảnh hiện có</h6>
+                            <div class="row" id="existing-images-container">
+                                @foreach (var image in Model.ExistingImages)
+                                {
+                                    <div class="col-md-3 mb-3 existing-image-item" data-image-id="@image.Id">
+                                        <div class="image-card">
+                                            <img src="@image.ImageUrl" alt="@image.Name" class="img-thumbnail" style="width: 100%; height: 150px; object-fit: cover;" />
+                                            <div class="image-info mt-2">
+                                                <small class="text-muted d-block">@(image.Name ?? "Không có tên")</small>
+                                                <button type="button" class="btn btn-sm btn-danger mt-1 delete-existing-image" data-image-id="@image.Id">
+                                                    <i class="fas fa-trash"></i> Xóa
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Quản lý biến thể -->
+            <div class="card mt-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">Quản lý biến thể sản phẩm</h5>
+                    <button type="button" class="btn btn-sm btn-primary" id="add-variant-btn" style="background-color: #428A3C;">
+                        <i class="fas fa-plus"></i> Thêm biến thể
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div id="variants-container">
+                        @if (Model.Variants != null && Model.Variants.Any())
+                        {
+                            @for (int i = 0; i < Model.Variants.Count; i++)
+                            {
+                                <div class="variant-item border rounded p-3 mb-3" data-variant-index="@i">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <h6 class="mb-0">Biến thể #@(i + 1)</h6>
+                                        <button type="button" class="btn btn-sm btn-danger delete-variant-btn">
+                                            <i class="fas fa-trash"></i> Xóa
+                                        </button>
+                                    </div>
+
+                                    <input type="hidden" name="Variants[@i].Id" value="@Model.Variants[i].Id" />
+                                    <input type="hidden" name="Variants[@i].IsDeleted" value="false" class="variant-deleted-flag" />
+
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <div class="form-group mb-3">
+                                                <label class="form-label">Kích cỡ</label>
+                                                <input type="text" name="Variants[@i].Size" value="@Model.Variants[i].Size" class="form-control" placeholder="VD: 42, L, XL" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group mb-3">
+                                                <label class="form-label">Giá bán (VNĐ)</label>
+                                                <input type="number" name="Variants[@i].Price" value="@Model.Variants[i].Price" step="0.01" class="form-control" placeholder="0" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group mb-3">
+                                                <label class="form-label">Số lượng</label>
+                                                <input type="number" name="Variants[@i].Stock" value="@Model.Variants[i].Stock" class="form-control" placeholder="0" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group mb-3">
+                                                <label class="form-label">SKU</label>
+                                                <input type="text" name="Variants[@i].SKU" value="@Model.Variants[i].SKU" class="form-control" placeholder="Mã SKU" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group mb-3">
+                                                <label class="form-label">Màu sắc</label>
+                                                <select name="Variants[@i].ColorId" class="form-control" data-current-color="@Model.Variants[i].ColorId">
+                                                    <option value="">-- Chọn màu --</option>
+                                                    <!-- Sẽ được load bằng JavaScript -->
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+
+                    @if (Model.Variants == null || !Model.Variants.Any())
+                    {
+                        <div class="text-center py-4" id="no-variants-message">
+                            <i class="fas fa-cube fa-2x text-muted mb-2"></i>
+                            <p class="text-muted">Chưa có biến thể nào. Nhấn "Thêm biến thể" để tạo biến thể mới.</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Hành động</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary" style="background-color: #428A3C;">
+                            <i class="fas fa-save"></i> Cập nhật sản phẩm
+                        </button>
+                        <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-outline-info">
+                            <i class="fas fa-eye"></i> Xem chi tiết
+                        </a>
+                        <a asp-action="Index" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left"></i> Quay lại danh sách
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thông tin tóm tắt -->
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Thông tin tóm tắt</h5>
+                </div>
+                <div class="card-body">
+                    <div class="summary-item">
+                        <span class="summary-label">ID sản phẩm:</span>
+                        <span class="summary-value">#@Model.Id</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Số biến thể:</span>
+                        <span class="summary-value" id="variant-count">@(Model.Variants?.Count ?? 0)</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Số ảnh:</span>
+                        <span class="summary-value" id="image-count">@(Model.ExistingImages?.Count ?? 0)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lưu ý -->
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-info-circle text-info"></i> Lưu ý
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success"></i>
+                            Giá biến thể có thể khác giá niêm yết
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success"></i>
+                            Ảnh mặt trước/sau sẽ được đặt tên tự động
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success"></i>
+                            Chỉ chấp nhận file ảnh (JPG, PNG, GIF)
+                        </li>
+                        <li class="mb-0">
+                            <i class="fas fa-exclamation-triangle text-warning"></i>
+                            Xóa ảnh/biến thể sẽ không thể khôi phục
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden fields for deleted items -->
+    <div id="deleted-items-container"></div>
+</form>
+
+@section styles {
+}
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            let variantIndex = @(Model.Variants?.Count ?? 0);
+            let deletedImageIds = [];
+            let deletedVariantIds = [];
+            let colorsData = [];
+
+            loadColors();
+
+            function loadColors() {
+                $.ajax({
+                    url: '@Url.Action("GetColors", "Products")',
+                    type: 'GET',
+                    success: function(colors) {
+                        colorsData = colors;
+                        populateExistingColorSelects();
+                    },
+                    error: function() {
+                        console.error('Không thể load danh sách màu');
+                    }
+                });
+            }
+
+            // Populate màu cho các dropdown đã tồn tại
+            function populateExistingColorSelects() {
+                $('.variant-item select[name*="ColorId"]').each(function() {
+                    const $select = $(this);
+                    const currentColorId = $select.data('current-color') || '';
+
+                    populateColorSelect($select, currentColorId);
+                });
+            }
+
+            // Populate một dropdown màu cụ thể
+            function populateColorSelect($select, selectedColorId = '') {
+                $select.empty();
+                $select.append('<option value="">-- Chọn màu --</option>');
+
+                colorsData.forEach(function(color) {
+                    const isSelected = color.id == selectedColorId ? 'selected' : '';
+                    const colorStyle = color.hex ? `style="background-color: ${color.hex}; color: ${getContrastColor(color.hex)};"` : '';
+
+                    $select.append(`
+                        <option value="${color.id}" ${isSelected} ${colorStyle}>
+                            ${color.name} ${color.hex ? `(${color.hex})` : ''}
+                        </option>
+                    `);
+                });
+
+                // Thêm style cho select để hiển thị màu được chọn
+                updateSelectStyle($select);
+
+                // Lắng nghe sự kiện thay đổi để cập nhật style
+                $select.on('change', function() {
+                    updateSelectStyle($(this));
+                });
+            }
+
+            // Cập nhật style cho select dựa trên màu được chọn
+            function updateSelectStyle($select) {
+                const selectedOption = $select.find('option:selected');
+                const colorId = $select.val();
+
+                if (colorId && colorsData.length > 0) {
+                    const color = colorsData.find(c => c.id == colorId);
+                    if (color && color.hex) {
+                        $select.css({
+                            'background-color': color.hex,
+                            'color': getContrastColor(color.hex),
+                            'border': '2px solid ' + color.hex
+                        });
+                    }
+                } else {
+                    $select.css({
+                        'background-color': '',
+                        'color': '',
+                        'border': ''
+                    });
+                }
+            }
+
+            // Tính màu contrast để text dễ đọc
+            function getContrastColor(hexColor) {
+                // Chuyển hex sang RGB
+                const r = parseInt(hexColor.substr(1, 2), 16);
+                const g = parseInt(hexColor.substr(3, 2), 16);
+                const b = parseInt(hexColor.substr(5, 2), 16);
+
+                // Tính độ sáng
+                const brightness = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+
+                return brightness > 128 ? '#000000' : '#FFFFFF';
+            }
+
+
+            // Xử lý thông báo
+            var successMessage = $('#success-message').data('msg');
+            var errorMessage = $('#error-message').data('msg');
+            if (successMessage) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Thành công',
+                    text: successMessage
+                });
+            } else if (errorMessage) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Lỗi',
+                    text: errorMessage
+                });
+            }
+
+            // Thêm biến thể mới
+            $('#add-variant-btn').click(function () {
+                $('#no-variants-message').hide();
+
+                const variantHtml = `
+                    <div class="variant-item border rounded p-3 mb-3" data-variant-index="${variantIndex}">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h6 class="mb-0">Biến thể #${variantIndex + 1}</h6>
+                            <button type="button" class="btn btn-sm btn-danger delete-variant-btn">
+                                <i class="fas fa-trash"></i> Xóa
+                            </button>
+                        </div>
+
+                        <input type="hidden" name="Variants[${variantIndex}].Id" value="0" />
+                        <input type="hidden" name="Variants[${variantIndex}].IsDeleted" value="false" class="variant-deleted-flag" />
+
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="form-group mb-3">
+                                    <label class="form-label">Kích cỡ</label>
+                                    <input type="text" name="Variants[${variantIndex}].Size" class="form-control" placeholder="VD: 42, L, XL" />
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group mb-3">
+                                    <label class="form-label">Giá bán (VNĐ)</label>
+                                    <input type="number" name="Variants[${variantIndex}].Price" step="0.01" class="form-control" placeholder="0" />
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group mb-3">
+                                    <label class="form-label">Số lượng</label>
+                                    <input type="number" name="Variants[${variantIndex}].Stock" class="form-control" placeholder="0" />
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group mb-3">
+                                    <label class="form-label">SKU</label>
+                                    <input type="text" name="Variants[${variantIndex}].SKU" class="form-control" placeholder="Mã SKU" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label class="form-label">Màu sắc</label>
+                                    <select name="Variants[${variantIndex}].ColorId" class="form-control">
+                                        <option value="">-- Chọn màu --</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                const $newVariant = $(variantHtml);
+                $('#variants-container').append($newVariant);
+
+                // Populate màu cho dropdown mới
+                const $newSelect = $newVariant.find('select[name*="ColorId"]');
+                populateColorSelect($newSelect);
+
+                variantIndex++;
+                updateVariantCount();
+            });
+
+            // Xóa biến thể
+            $(document).on('click', '.delete-variant-btn', function () {
+                const variantItem = $(this).closest('.variant-item');
+                const variantId = variantItem.find('input[name*=".Id"]').val();
+
+                if (variantId && variantId !== "0") {
+                    deletedVariantIds.push(variantId);
+                    variantItem.addClass('deleted');
+                    variantItem.find('.variant-deleted-flag').val('true');
+                    variantItem.hide();
+                } else {
+                    variantItem.remove();
+                }
+
+                updateVariantCount();
+                updateDeletedVariantIds();
+            });
+
+            // Xóa ảnh hiện có
+            $(document).on('click', '.delete-existing-image', function () {
+                const imageId = $(this).data('image-id');
+                const imageItem = $(this).closest('.existing-image-item');
+
+                Swal.fire({
+                    title: 'Xác nhận xóa ảnh',
+                    text: 'Bạn có chắc chắn muốn xóa ảnh này?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Xóa',
+                    cancelButtonText: 'Hủy'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        deletedImageIds.push(imageId);
+                        imageItem.addClass('deleted').fadeOut();
+                        updateDeletedImageIds();
+                        updateImageCount();
+                    }
+                });
+            });
+
+            // Submit form
+            $('#editProductForm').submit(function (e) {
+                e.preventDefault();
+
+                // Validation
+                if (!validateForm()) {
+                    return false;
+                }
+
+                Swal.fire({
+                    title: 'Đang cập nhật...',
+                    text: 'Vui lòng chờ trong giây lát',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                this.submit();
+            });
+
+            // Functions
+            function updateVariantCount() {
+                const activeVariants = $('.variant-item:not(.deleted)').length;
+                $('#variant-count').text(activeVariants);
+            }
+
+            function updateImageCount() {
+                const activeImages = $('.existing-image-item:not(.deleted)').length;
+                $('#image-count').text(activeImages);
+            }
+
+            function updateDeletedVariantIds() {
+                $('#deleted-items-container').find('input[name="DeletedVariantIds"]').remove();
+                deletedVariantIds.forEach(function(id) {
+                    $('#deleted-items-container').append(`<input type="hidden" name="DeletedVariantIds" value="${id}" />`);
+                });
+            }
+
+            function updateDeletedImageIds() {
+                $('#deleted-items-container').find('input[name="DeletedImageIds"]').remove();
+                deletedImageIds.forEach(function(id) {
+                    $('#deleted-items-container').append(`<input type="hidden" name="DeletedImageIds" value="${id}" />`);
+                });
+            }
+
+            function validateForm() {
+                let isValid = true;
+
+                // Validate tên sản phẩm
+                if (!$('#Name').val().trim()) {
+                    Swal.fire('Lỗi', 'Vui lòng nhập tên sản phẩm', 'error');
+                    isValid = false;
+                }
+
+                // Validate giá niêm yết
+                if (!$('#BasePrice').val() || parseFloat($('#BasePrice').val()) <= 0) {
+                    Swal.fire('Lỗi', 'Vui lòng nhập giá niêm yết hợp lệ', 'error');
+                    isValid = false;
+                }
+
+                // Validate danh mục
+                if (!$('#CategoryId').val()) {
+                    Swal.fire('Lỗi', 'Vui lòng chọn danh mục', 'error');
+                    isValid = false;
+                }
+
+                return isValid;
+            }
+
+            // Initialize
+            updateVariantCount();
+            updateImageCount();
+        });
+    </script>
+}

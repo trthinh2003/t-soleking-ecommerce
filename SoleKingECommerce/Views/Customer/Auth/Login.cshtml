@@ -1,0 +1,68 @@
+﻿@using SoleKingECommerce.ViewModels.Auth
+@{
+    ViewData["Title"] = "Đăng nhập";
+    ViewData["SubTitle"] = "Chào mừng bạn trở lại";
+    Layout = "_CustomerAuthLayout";
+    string returnUrl = ViewBag.ReturnUrl as string;
+}
+
+@model LoginViewModel
+
+<form asp-action="Login" method="post">
+    @if (!string.IsNullOrEmpty(returnUrl))
+    {
+        <input type="hidden" name="returnUrl" value="@returnUrl" />
+    }
+    <div asp-validation-summary="ModelOnly" class="validation-summary-errors"></div>
+
+    <div class="form-group">
+        <label asp-for="Email">Email <span class="text-danger">*</span></label>
+        <input asp-for="Email" class="form-control" placeholder="Nhập email" />
+        <span asp-validation-for="Email" class="field-validation-error"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Password">Mật khẩu <span class="text-danger">*</span></label>
+        <input asp-for="Password" type="password" class="form-control" placeholder="Nhập mật khẩu" />
+        <span asp-validation-for="Password" class="field-validation-error"></span>
+    </div>
+
+    <div class="form-options">
+        <div class="checkbox-group">
+            <input asp-for="RememberMe" type="checkbox" />
+            <label asp-for="RememberMe">Ghi nhớ đăng nhập</label>
+        </div>
+        <div class="forgot-password">
+            <a asp-action="ForgotPassword">Quên mật khẩu?</a>
+        </div>
+    </div>
+
+    <button type="submit" class="btn-primary">Đăng nhập</button>
+</form>
+
+<div class="divider">
+    <span>Hoặc đăng nhập với</span>
+</div>
+
+<div class="social-login">
+    <a href="#" class="social-btn text-danger">
+        <span><i class="fab fa-google mr-2"></i></span> Google
+    </a>
+    <a href="#" class="social-btn text-primary">
+        <span><i class="fab fa-facebook"></i></span> Facebook
+    </a>
+</div>
+
+<div class="auth-links">
+    <p>Chưa có tài khoản? <a asp-controller="AuthCustomer" asp-action="Register">Đăng ký ngay</a></p>
+</div>
+
+<div class="auth-links">
+    <p><a asp-controller="Home" asp-action="Index">Về trang chủ</a></p>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

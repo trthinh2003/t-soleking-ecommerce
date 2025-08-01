@@ -1,0 +1,45 @@
+﻿.page-header {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.search-group {
+    position: relative;
+    min-width: 120px;
+}
+
+    .search-group .form-control {
+        height: 38px;
+        border-radius: 0.25rem;
+        box-shadow: none;
+        transition: all 0.3s;
+    }
+
+        .search-group .form-control:focus {
+            border-color: #80bdff;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+.date-group {
+    background: #fff;
+    padding: 0 0.5rem;
+    border-radius: 0.25rem;
+    border: 1px solid #ced4da;
+}
+
+    .date-group span {
+        font-size: 0.9rem;
+    }
+
+@@media (max-width: 992px) {
+    .search-group {
+        flex: 1 1 100%;
+    }
+
+    .date-group {
+        flex: 1 1 100%;
+        justify-content: space-between;
+    }
+}

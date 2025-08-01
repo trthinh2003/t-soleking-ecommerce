@@ -1,77 +1,449 @@
-﻿@{
+﻿@model IEnumerable<SoleKingECommerce.ViewModels.Product.ProductListViewModel>
+
+@{
     ViewData["Title"] = "Trang chủ";
 }
 
 <!-- Slider -->
-<div id="carouselExampleIndicators" class="carousel slide mb-5" data-ride="carousel">
-    <ol class="carousel-indicators">
-        <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-        <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-        <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
-    </ol>
+<div id="carouselExampleIndicators" class="carousel slide mb-5 hero-slider" data-bs-ride="carousel">
+    <div class="carousel-indicators">
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+    </div>
     <div class="carousel-inner">
         <div class="carousel-item active">
-            <img src="~/images/slider1.jpg" class="d-block w-100" alt="...">
+            <img src="~/img/customer/banner/banner1.png" class="d-block w-100 h-100" alt="Banner 1">
+            <div class="banner-1-call-to-action">MUA SẮM NGAY</div>
         </div>
         <div class="carousel-item">
-            <img src="~/images/slider2.jpg" class="d-block w-100" alt="...">
-        </div>
-        <div class="carousel-item">
-            <img src="~/images/slider3.jpg" class="d-block w-100" alt="...">
+            <img src="~/img/customer/banner/banner2.png" class="d-block w-100 h-100" alt="Banner 2">
+            <div class="banner-2-call-to-action">MUA SẮM NGAY</div>
         </div>
     </div>
-    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="sr-only">Previous</span>
-    </a>
-    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
         <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="sr-only">Next</span>
-    </a>
+        <span class="visually-hidden">Next</span>
+    </button>
 </div>
 
 <!-- Sản phẩm nổi bật -->
 <section class="mb-5">
-    <h2 class="text-center mb-4">Sản phẩm nổi bật</h2>
+    <h2 class="section-title">Sản phẩm nổi bật</h2>
     <div class="row">
-        @for (int i = 0; i < 4; i++)
+        @if (Model != null && Model.Any())
         {
-            <div class="col-md-3 mb-4">
-                <div class="card h-100">
-                    <img src="~/images/product-@(i+1).jpg" class="card-img-top" alt="Product @(i+1)">
-                    <div class="card-body">
-                        <h5 class="card-title">Giày thể thao @(i + 1)</h5>
-                        <p class="card-text text-danger font-weight-bold">1.200.000đ</p>
-                        <div class="d-flex justify-content-between">
-                            <a href="#" class="btn btn-sm btn-outline-primary">Chi tiết</a>
-                            <a href="#" class="btn btn-sm btn-success">Thêm vào giỏ</a>
+            @foreach (var product in Model.Take(8))
+            {
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-4 fade-in">
+                    <div class="card product-card h-100">
+                        @if (!string.IsNullOrEmpty(product.ImageUrl))
+                        {
+                            <img src="@product.ImageUrl" class="card-img-top product-img" alt="@product.Name">
+                        }
+                        else
+                        {
+                            <img src="~/img/no-image.jpg" class="card-img-top product-img" alt="No image available">
+                        }
+
+                        <div class="card-body product-body">
+                            <h5 class="card-title product-title" title="@product.Name">@product.Name</h5>
+                            <p class="text-muted small mb-1">@product.Brand</p>
+                            <p class="product-price mb-3">
+                                @if (product.BasePrice.HasValue)
+                                {
+                                    @product.BasePrice.Value.ToString("N0") <small>đ</small>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">Liên hệ</span>
+                                }
+                            </p>
+                            <div class="product-actions">
+                                <a href="@Url.Action("Detail", "Product", new { id = product.Id })" class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-eye"></i> Chi tiết
+                                </a>
+                                <button class="btn btn-sm add-to-cart-btn" data-product-id="@product.Id" style="background-color: #1daa62; color: white;">
+                                    <i class="fas fa-shopping-cart"></i> Thêm vào giỏ
+                                </button>
+                            </div>
                         </div>
                     </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12">
+                <div class="alert alert-info text-center">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Hiện tại chưa có sản phẩm nào để hiển thị.
                 </div>
             </div>
         }
     </div>
-    <div class="text-center">
-        <a asp-controller="Product" asp-action="Index" class="btn btn-primary">Xem tất cả sản phẩm</a>
+    <div class="text-center mt-4">
+        <a asp-controller="Product" asp-action="Index" class="btn btn-primary">
+            <i class="fas fa-th-large me-2"></i> Xem tất cả sản phẩm
+        </a>
     </div>
 </section>
 
 <!-- Tin tức -->
 <section class="mb-5">
-    <h2 class="text-center mb-4">Tin tức mới nhất</h2>
+    <h2 class="section-title">Tin tức mới nhất</h2>
     <div class="row">
         @for (int i = 0; i < 3; i++)
         {
-            <div class="col-md-4 mb-4">
-                <div class="card h-100">
-                    <img src="~/images/blog-@(i+1).jpg" class="card-img-top" alt="Blog @(i+1)">
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card blog-card h-100">
+                    <div class="blog-image-container">
+                        <img src="~/img/blog/blog-@(i+1).jpg" class="card-img-top blog-img" alt="Blog @(i+1)">
+                        <div class="blog-date">
+                            <span class="day">@DateTime.Now.AddDays(-i * 2).Day</span>
+                            <span class="month">Th@DateTime.Now.AddDays(-i*2).Month</span>
+                        </div>
+                    </div>
                     <div class="card-body">
-                        <h5 class="card-title">Xu hướng giày dép mùa hè 2023</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        <a href="#" class="btn btn-sm btn-outline-primary">Đọc tiếp</a>
+                        <h5 class="card-title">
+                            @switch (i)
+                            {
+                                case 0:
+                                    <text>Xu hướng giày thể thao 2024</text>
+                                    break;
+                                case 1:
+                                    <text>Cách chọn giày phù hợp với từng môn thể thao</text>
+                                    break;
+                                case 2:
+                                    <text>Bí quyết bảo quản giày để giữ form lâu</text>
+                                    break;
+                            }
+                        </h5>
+                        <p class="card-text text-muted">
+                            @switch (i)
+                            {
+                                case 0:
+                                    <text>Khám phá những xu hướng giày thể thao hot nhất năm 2024 từ các thương hiệu nổi tiếng...</text>
+                                    break;
+                                case 1:
+                                    <text>Hướng dẫn chi tiết cách chọn giày phù hợp cho chạy bộ, tập gym, bóng đá và các môn thể thao khác...</text>
+                                    break;
+                                case 2:
+                                    <text>Những mẹo hay giúp bạn bảo quản giày thể thao luôn sạch sẽ và giữ form như mới...</text>
+                                    break;
+                            }
+                        </p>
+                        <a href="#" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-arrow-right me-1"></i> Đọc tiếp
+                        </a>
                     </div>
                 </div>
             </div>
         }
     </div>
 </section>
+
+<!-- Thống kê nhanh -->
+<section class="mb-5 stats-section">
+    <div class="row text-center">
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-box"></i>
+                </div>
+                <h3 class="stat-number">@(Model?.Count() ?? 0)+</h3>
+                <p class="stat-label">Sản phẩm</p>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h3 class="stat-number">1000+</h3>
+                <p class="stat-label">Khách hàng</p>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-shipping-fast"></i>
+                </div>
+                <h3 class="stat-number">24h</h3>
+                <p class="stat-label">Giao hàng</p>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-medal"></i>
+                </div>
+                <h3 class="stat-number">5</h3>
+                <p class="stat-label">Năm kinh nghiệm</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Cart Icon -->
+<div class="cart-icon-container">
+    <div class="cart-icon" id="cartIcon">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="cart-count">0</span>
+    </div>
+</div>
+
+<!-- Cart Dropdown Container -->
+<div class="cart-dropdown" id="cartDropdown" style="display: none;">
+</div>
+
+<!-- Flying Item Effect -->
+<div id="flyingItem" class="flying-item">
+    <img src="" alt="Flying item">
+</div>
+
+@section Styles {
+    <link href="~/css/customer/home.css" rel="stylesheet" />
+    <link href="~/css/customer/cart.css" rel="stylesheet" />
+}
+
+@section Scripts {
+    <script>
+        // Cart functionality
+        $(document).ready(function() {
+            // Initialize cart count
+            updateCartCount();
+
+            // Show cart dropdown
+            $('#cartIcon').click(function(e) {
+                e.stopPropagation();
+                console.log('Cart icon clicked');
+                // Kiểm tra trạng thái hiện tại của dropdown
+                if ($('#cartDropdown').is(':visible')) {
+                    $('#cartDropdown').hide();
+                } else {
+                    loadCart();
+                    $('#cartDropdown').show(); 
+                }
+            });
+
+            // Close cart khi click ra ngoài
+            $(document).click(function(e) {
+                if (!$(e.target).closest('.cart-icon-container, .cart-dropdown').length) {
+                    $('#cartDropdown').hide();
+                }
+            });
+
+            // Add to cart với hiệu ứng bay bay :>
+            $('.add-to-cart-btn').click(function(e) {
+                e.preventDefault();
+                const productId = $(this).data('product-id');
+                const productImg = $(this).closest('.product-card').find('.product-img').attr('src');
+                showFlyingItem($(this), productImg, function() {
+                    addToCart(productId);
+                });
+            });
+        });
+
+        function addToCart(productId) {
+            $.post('@Url.Action("AddToCart", "Home")', { productId: productId })
+            .done(function(response) {
+                if (response.success) {
+                    updateCartCount(response.itemCount);
+                    // Show success message
+                    showToast('Đã thêm sản phẩm vào giỏ hàng!', 'success');
+                } else {
+                    showToast(response.message || 'Có lỗi xảy ra!', 'error');
+                }
+            })
+            .fail(function(xhr) {
+                console.error('Error adding to cart:', xhr);
+                showToast('Có lỗi xảy ra khi thêm vào giỏ hàng', 'error');
+            });
+        }
+
+        function loadCart() {
+            console.log('Loading cart...');
+            $.get('@Url.Action("GetCart", "Home")')
+            .done(function(data) {
+                console.log('Cart loaded successfully:', data);
+                $('#cartDropdown').html(data);
+
+                $('#cartDropdown').show();
+
+                setupCartEvents();
+            })
+            .fail(function(xhr) {
+                console.error('Error loading cart:', xhr);
+                console.error('Status:', xhr.status);
+                console.error('Response:', xhr.responseText);
+                $('#cartDropdown').html('<div class="p-3 text-center text-danger">Không thể tải giỏ hàng</div>');
+                $('#cartDropdown').show();
+            });
+        }
+
+        function setupCartEvents() {
+            // Increase quantity
+            $('.increase-qty').click(function() {
+                const item = $(this).closest('.cart-item');
+                const productId = item.data('product-id');
+                const quantity = parseInt(item.find('.quantity').text()) + 1;
+                updateCartItem(productId, quantity);
+            });
+
+            // Decrease quantity
+            $('.decrease-qty').click(function() {
+                const item = $(this).closest('.cart-item');
+                const productId = item.data('product-id');
+                const quantity = parseInt(item.find('.quantity').text()) - 1;
+                updateCartItem(productId, quantity);
+            });
+
+            // Remove item
+            $('.remove-item').click(function() {
+                const item = $(this).closest('.cart-item');
+                const productId = item.data('product-id');
+                removeFromCart(productId);
+            });
+
+            // Close cart
+            $('.cart-header .btn-close').click(function() {
+                $('#cartDropdown').hide();
+            });
+        }
+
+        function updateCartItem(productId, quantity) {
+            $.post('@Url.Action("UpdateCartItem", "Home")', {
+                productId: productId,
+                quantity: quantity
+            })
+            .done(function(response) {
+                if (response.success) {
+                    loadCart();
+                    updateCartCount();
+                } else {
+                    showToast(response.message || 'Có lỗi xảy ra!', 'error');
+                }
+            })
+            .fail(function(xhr) {
+                console.error('Error updating cart item:', xhr);
+                showToast('Có lỗi xảy ra khi cập nhật giỏ hàng', 'error');
+            });
+        }
+
+        function removeFromCart(productId) {
+            $.post('@Url.Action("RemoveFromCart", "Home")', { productId: productId })
+            .done(function(response) {
+                if (response.success) {
+                    loadCart();
+                    updateCartCount();
+                    showToast('Đã xóa sản phẩm khỏi giỏ hàng', 'success');
+                } else {
+                    showToast(response.message || 'Có lỗi xảy ra!', 'error');
+                }
+            })
+            .fail(function(xhr) {
+                console.error('Error removing from cart:', xhr);
+                showToast('Có lỗi xảy ra khi xóa sản phẩm', 'error');
+            });
+        }
+
+        function updateCartCount(count) {
+            if (count !== undefined) {
+                $('.cart-count').text(count);
+            } else {
+                $.get('@Url.Action("GetCartItemCount", "Home")')
+                .done(function(data) {
+                    $('.cart-count').text(data);
+                })
+                .fail(function(xhr) {
+                    console.error('Error getting cart count:', xhr);
+                });
+            }
+        }
+
+        function showFlyingItem(clickedElement, productImg, callback) {
+            const $flyingItem = $('#flyingItem');
+            const cartIcon = $('#cartIcon');
+
+            // Get positions
+            const clickedRect = clickedElement[0].getBoundingClientRect();
+            const cartIconRect = cartIcon[0].getBoundingClientRect();
+
+            // Set start position (button position)
+            const startX = clickedRect.left + clickedRect.width / 2;
+            const startY = clickedRect.top + clickedRect.height / 2;
+
+            // Set end position (cart icon position)
+            const endX = cartIconRect.left + cartIconRect.width / 2;
+            const endY = cartIconRect.top + cartIconRect.height / 2;
+
+            // Set image
+            $flyingItem.find('img').attr('src', productImg);
+
+            // Show and animate
+            $flyingItem.css({
+                'left': startX + 'px',
+                'top': startY + 'px',
+                'opacity': '1'
+            });
+
+            // Animate to cart
+            $flyingItem.animate({
+                left: endX,
+                top: endY,
+                width: 20,
+                height: 20
+            }, 800, 'swing', function() {
+                $flyingItem.css('opacity', '0');
+                if (typeof callback === 'function') {
+                    callback();
+                }
+            });
+        }
+
+        function showToast(message, type = 'info') {
+            // Simple toast notification
+            const toast = $(`
+                <div class="toast-notification ${type}">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+                    <span>${message}</span>
+                </div>
+            `);
+
+            $('body').append(toast);
+
+            setTimeout(() => {
+                toast.addClass('show');
+            }, 100);
+
+            setTimeout(() => {
+                toast.removeClass('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Animation khi scroll
+        document.addEventListener('DOMContentLoaded', function() {
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('fade-in');
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.product-card, .category-card, .blog-card').forEach(card => {
+                observer.observe(card);
+            });
+        });
+    </script>
+}

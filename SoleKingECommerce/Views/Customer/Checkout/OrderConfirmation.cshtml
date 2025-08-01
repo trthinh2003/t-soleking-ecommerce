@@ -1,0 +1,342 @@
+﻿@model SoleKingECommerce.Models.Order
+
+@{
+    ViewData["Title"] = "Xác nhận đơn hàng";
+}
+
+<div class="container-fluid order-confirmation-container">
+    <!-- Breadcrumb -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <nav aria-label="breadcrumb" class="custom-breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="@Url.Action("Index", "Home")">
+                            <i class="fas fa-home"></i>
+                            Trang chủ
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="@Url.Action("Index", "Cart")">
+                            <i class="fas fa-shopping-cart"></i>
+                            Giỏ hàng
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="@Url.Action("Index", "Checkout")">
+                            <i class="fas fa-credit-card"></i>
+                            Thanh toán
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active">
+                        <i class="fas fa-check-circle"></i>
+                        Xác nhận đơn hàng
+                    </li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Success Message -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="alert alert-success text-center">
+                <i class="fas fa-check-circle fa-3x mb-3"></i>
+                <h4>Đặt hàng thành công!</h4>
+                <p class="mb-0">Cảm ơn bạn đã mua hàng. Đơn hàng của bạn đang được xử lý.</p>
+            </div>
+        </div>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="alert alert-info text-center">
+                    <i class="fas fa-info-circle"></i>
+                    @TempData["SuccessMessage"]
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Order Details -->
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card order-confirmation-card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-receipt"></i>
+                        Chi tiết đơn hàng #@Model.Id
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <!-- Order Info -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h5><i class="fas fa-calendar"></i> Thông tin đơn hàng</h5>
+                            <p><strong>Mã đơn hàng:</strong> #@Model.Id</p>
+                            <p><strong>Ngày đặt:</strong> @Model.CreatedAt?.ToString("dd/MM/yyyy HH:mm")</p>
+                            <p>
+                                <strong>Trạng thái:</strong>
+                                <span class="badge badge-@(Model.Status == "Confirmed" ? "success" : "warning")">
+                                    @(Model.Status == "Confirmed" ? "Đã xác nhận" :
+                                                                        Model.Status == "Pending" ? "Đang chờ" : Model.Status)
+                                </span>
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <h5><i class="fas fa-truck"></i> Thông tin giao hàng</h5>
+                            <p><strong>Tên người nhận:</strong> @Model.CustomerName</p>
+                            <p><strong>Số điện thoại:</strong> @Model.CustomerPhone</p>
+                            <p><strong>Địa chỉ:</strong> @Model.CustomerAddress</p>
+                        </div>
+                    </div>
+
+                    <!-- Payment Info -->
+                    @if (Model.Transactions != null && Model.Transactions.Any())
+                    {
+                        var transaction = Model.Transactions.First();
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5><i class="fas fa-credit-card"></i> Thông tin thanh toán</h5>
+                                <p>
+                                    <strong>Phương thức:</strong>
+                                    @switch (transaction.PaymentMethod)
+                                    {
+                                        case "COD":
+                                            <span>Thanh toán khi nhận hàng (COD)</span>
+                                            break;
+                                        case "VNPAY":
+                                            <span>VNPAY</span>
+                                            break;
+                                        case "MOMO":
+                                            <span>Ví MoMo</span>
+                                            break;
+                                        case "PAYPAL":
+                                            <span>PayPal</span>
+                                            break;
+                                        default:
+                                            <span>@transaction.PaymentMethod</span>
+                                            break;
+                                    }
+                                </p>
+                                <p>
+                                    <strong>Trạng thái thanh toán:</strong>
+                                    <span class="badge badge-@(transaction.PaymentStatus == "Completed" ? "success" :
+                                                                                                        transaction.PaymentStatus == "Pending" ? "warning" : "info")">
+                                        @(transaction.PaymentStatus == "Completed" ? "Đã thanh toán" :
+                                                                            transaction.PaymentStatus == "Pending" ? "Chưa thanh toán" :
+                                                                            transaction.PaymentStatus == "Processing" ? "Đang xử lý" : transaction.PaymentStatus)
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+                                        }
+
+                    <!-- Order Items -->
+                    <div class="order-items">
+                        <h5><i class="fas fa-box"></i> Sản phẩm đã đặt</h5>
+                        @if (Model.Items != null && Model.Items.Any())
+                        {
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Sản phẩm</th>
+                                            <th>Kích cỡ/Màu</th>
+                                            <th>Số lượng</th>
+                                            <th>Đơn giá</th>
+                                            <th>Thành tiền</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model.Items)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <div class="d-flex align-items-center">
+                                                        @if (!string.IsNullOrEmpty(item.ProductVariant?.Product?.ImageUrl))
+                                                        {
+                                                            <img src="@item.ProductVariant.Product.ImageUrl"
+                                                                 alt="@item.ProductVariant.Product.Name"
+                                                                 class="order-item-image me-3">
+                                                        }
+                                                        <div>
+                                                            <strong>@item.ProductVariant?.Product?.Name</strong>
+                                                            <br>
+                                                            <small class="text-muted">SKU: @item.ProductVariant?.SKU</small>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    @item.ProductVariant?.Size / @item.ProductVariant?.Color?.Name
+                                                </td>
+                                                <td>@item.Quantity</td>
+                                                <td>@item.Price.ToString("N0")đ</td>
+                                                <td>@((item.Price * item.Quantity).ToString("N0"))đ</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                    </div>
+
+                    <!-- Order Summary -->
+                    <div class="order-summary mt-4">
+                        <div class="row">
+                            <div class="col-md-6 offset-md-6">
+                                <table class="table table-sm">
+                                    <tr>
+                                        <td>Tạm tính:</td>
+                                        <td class="text-right">
+                                            @((Model.TotalPrice - 30000).ToString("N0"))đ
+                                        </td>
+                                    </tr>
+                                    @if (Model.VoucherUsages != null && Model.VoucherUsages.Any())
+                                    {
+                                        <tr>
+                                            <td>Giảm giá:</td>
+                                            <td class="text-right text-success">
+                                                -@(((Model.TotalPrice - 30000) * 0.1m).ToString("N0"))đ
+                                            </td>
+                                        </tr>
+                                    }
+                                    <tr>
+                                        <td>Phí vận chuyển:</td>
+                                        <td class="text-right">30,000đ</td>
+                                    </tr>
+                                    <tr class="font-weight-bold">
+                                        <td>Tổng cộng:</td>
+                                        <td class="text-right">@Model.TotalPrice.ToString("N0")đ</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="text-center mt-4">
+                        <a href="@Url.Action("Index", "Home")" class="btn btn-primary me-3">
+                            <i class="fas fa-home"></i>
+                            Về trang chủ
+                        </a>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <a href="@Url.Action("MyOrders", "Account")" class="btn btn-outline-primary">
+                                <i class="fas fa-list"></i>
+                                Xem đơn hàng của tôi
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .order-confirmation-container {
+            padding: 2rem 0;
+            background-color: #f8f9fa;
+        }
+
+        .order-confirmation-card {
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            border: none;
+            border-radius: 10px;
+        }
+
+            .order-confirmation-card .card-header {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                border-radius: 10px 10px 0 0;
+                padding: 1.5rem;
+            }
+
+            .order-confirmation-card .card-title {
+                margin-bottom: 0;
+                font-weight: 600;
+            }
+
+        .order-item-image {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .badge {
+            font-size: 0.875rem;
+            padding: 0.5rem 1rem;
+        }
+
+        .badge-success {
+            background-color: #28a745;
+        }
+
+        .badge-warning {
+            background-color: #ffc107;
+            color: #212529;
+        }
+
+        .badge-info {
+            background-color: #17a2b8;
+        }
+
+        .alert-success {
+            border-radius: 10px;
+            border: none;
+            box-shadow: 0 2px 10px rgba(40, 167, 69, 0.2);
+        }
+
+        .alert-info {
+            border-radius: 10px;
+            border: none;
+            box-shadow: 0 2px 10px rgba(23, 162, 184, 0.2);
+        }
+
+        .btn {
+            border-radius: 25px;
+            padding: 0.75rem 2rem;
+            font-weight: 500;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+        }
+
+        .btn-outline-primary {
+            border: 2px solid #667eea;
+            color: #667eea;
+        }
+
+            .btn-outline-primary:hover {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                border-color: #667eea;
+            }
+
+        .table th {
+            background-color: #f8f9fa;
+            border-top: none;
+            font-weight: 600;
+        }
+
+        .order-summary .table {
+            margin-bottom: 0;
+        }
+
+            .order-summary .table td {
+                border-top: 1px solid #dee2e6;
+                padding: 0.75rem 1rem;
+            }
+
+            .order-summary .table tr:last-child td {
+                border-bottom: 2px solid #667eea;
+                font-size: 1.1rem;
+            }
+    </style>
+}

@@ -1,7 +1,9 @@
-﻿@model SoleKingECommerce.ViewModels.Import.ImportDetailsViewModel
+﻿@using SoleKingECommerce.ViewModels.Category
+@model SoleKingECommerce.ViewModels.Import.ImportDetailsViewModel
 @{
     ViewData["Title"] = "Chi tiết phiếu nhập hàng #" + Model.Id.ToString("D5");
     Layout = "_AdminLayout";
+    var categories = ViewBag.Categories as IEnumerable<dynamic>;
 }
 
 <div class="page-header">
@@ -55,6 +57,15 @@
                     <label class="form-label fw-bold">Tổng tiền:</label>
                     <p class="text-danger fw-bold fs-4">@Model.TotalPrice.ToString("N0")đ</p>
                 </div>
+                <form asp-action="CreateFromExisting" method="post" class="mt-3">
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-copy"></i> Tạo 1 phiếu nhập giống phiếu này
+                    </button>
+                </form>
+                <a asp-action="CreateFromImport" asp-route-id="@Model.Id" class="btn btn-outline-secondary mt-2">
+                    <i class="fas fa-copy"></i> Nhập thêm từ phiếu này
+                </a>
             </div>
         </div>
     </div>
@@ -66,11 +77,12 @@
     </div>
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table">
+            <table class="table table-hover">
                 <thead>
                     <tr>
                         <th>STT</th>
                         <th>Tên sản phẩm</th>
+                        <th>Hình ảnh</th>
                         <th>Thương hiệu</th>
                         <th>Danh mục</th>
                         <th>Màu</th>
@@ -86,8 +98,15 @@
                         <tr>
                             <td>@index</td>
                             <td>@item.ProductName</td>
+                            <td><img class="rounded" src="@item.ImageUrl" alt="@item.ImageUrl" width="50" height="50" /></td>
                             <td>@item.Brand</td>
-                            <td>@item.CategoryName</td>
+                            <td>
+                                @{
+                                    var category = categories?.FirstOrDefault(c => c.Id == item.CategoryId);
+                                    var categoryName = category?.Name ?? "-";
+                                }
+                                @categoryName
+                            </td>
                             <td>@item.ColorName</td>
                             <td>@item.Size</td>
                             <td class="text-end">@item.Quantity</td>

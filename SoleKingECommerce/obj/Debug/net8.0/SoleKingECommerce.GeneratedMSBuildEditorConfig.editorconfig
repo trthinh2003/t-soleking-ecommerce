@@ -64,8 +64,24 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cSW1wb3J0c1xEZXRhaWxzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[E:/ProjectCV/shoes-ecommerce/SoleKingECommerce/SoleKingECommerce/Views/Admin/Imports/History.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cSW1wb3J0c1xIaXN0b3J5LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/ProjectCV/shoes-ecommerce/SoleKingECommerce/SoleKingECommerce/Views/Admin/Imports/HistoryDetails.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cSW1wb3J0c1xIaXN0b3J5RGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [E:/ProjectCV/shoes-ecommerce/SoleKingECommerce/SoleKingECommerce/Views/Admin/Imports/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cSW1wb3J0c1xJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/ProjectCV/shoes-ecommerce/SoleKingECommerce/SoleKingECommerce/Views/Admin/Products/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cUHJvZHVjdHNcRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/ProjectCV/shoes-ecommerce/SoleKingECommerce/SoleKingECommerce/Views/Admin/Products/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cUHJvZHVjdHNcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [E:/ProjectCV/shoes-ecommerce/SoleKingECommerce/SoleKingECommerce/Views/Admin/Suppliers/Create.cshtml]
@@ -84,12 +100,52 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cU3VwcGxpZXJzXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[E:/ProjectCV/shoes-ecommerce/SoleKingECommerce/SoleKingECommerce/Views/Admin/Vouchers/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cVm91Y2hlcnNcQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/ProjectCV/shoes-ecommerce/SoleKingECommerce/SoleKingECommerce/Views/Admin/Vouchers/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cVm91Y2hlcnNcRGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/ProjectCV/shoes-ecommerce/SoleKingECommerce/SoleKingECommerce/Views/Admin/Vouchers/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cVm91Y2hlcnNcRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/ProjectCV/shoes-ecommerce/SoleKingECommerce/SoleKingECommerce/Views/Admin/Vouchers/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cVm91Y2hlcnNcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/ProjectCV/shoes-ecommerce/SoleKingECommerce/SoleKingECommerce/Views/Customer/Auth/ConfirmEmail.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3VzdG9tZXJcQXV0aFxDb25maXJtRW1haWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/ProjectCV/shoes-ecommerce/SoleKingECommerce/SoleKingECommerce/Views/Customer/Auth/Login.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3VzdG9tZXJcQXV0aFxMb2dpbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/ProjectCV/shoes-ecommerce/SoleKingECommerce/SoleKingECommerce/Views/Customer/Auth/Register.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3VzdG9tZXJcQXV0aFxSZWdpc3Rlci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [E:/ProjectCV/shoes-ecommerce/SoleKingECommerce/SoleKingECommerce/Views/Customer/Blog/Detail.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3VzdG9tZXJcQmxvZ1xEZXRhaWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [E:/ProjectCV/shoes-ecommerce/SoleKingECommerce/SoleKingECommerce/Views/Customer/Blog/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3VzdG9tZXJcQmxvZ1xJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/ProjectCV/shoes-ecommerce/SoleKingECommerce/SoleKingECommerce/Views/Customer/Cart/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3VzdG9tZXJcQ2FydFxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/ProjectCV/shoes-ecommerce/SoleKingECommerce/SoleKingECommerce/Views/Customer/Checkout/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3VzdG9tZXJcQ2hlY2tvdXRcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/ProjectCV/shoes-ecommerce/SoleKingECommerce/SoleKingECommerce/Views/Customer/Checkout/OrderConfirmation.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3VzdG9tZXJcQ2hlY2tvdXRcT3JkZXJDb25maXJtYXRpb24uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [E:/ProjectCV/shoes-ecommerce/SoleKingECommerce/SoleKingECommerce/Views/Customer/Contact/Index.cshtml]
@@ -108,6 +164,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3VzdG9tZXJcUHJvZHVjdFxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[E:/ProjectCV/shoes-ecommerce/SoleKingECommerce/SoleKingECommerce/Views/Shared/Components/CategoryMenu/Default.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXENvbXBvbmVudHNcQ2F0ZWdvcnlNZW51XERlZmF1bHQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [E:/ProjectCV/shoes-ecommerce/SoleKingECommerce/SoleKingECommerce/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
@@ -122,6 +182,14 @@ build_metadata.AdditionalFiles.CssScope =
 
 [E:/ProjectCV/shoes-ecommerce/SoleKingECommerce/SoleKingECommerce/Views/Shared/_AdminSidebar.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9BZG1pblNpZGViYXIuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/ProjectCV/shoes-ecommerce/SoleKingECommerce/SoleKingECommerce/Views/Shared/_CartPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9DYXJ0UGFydGlhbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/ProjectCV/shoes-ecommerce/SoleKingECommerce/SoleKingECommerce/Views/Shared/_CustomerAuthLayout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9DdXN0b21lckF1dGhMYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [E:/ProjectCV/shoes-ecommerce/SoleKingECommerce/SoleKingECommerce/Views/Shared/_CustomerFooter.cshtml]

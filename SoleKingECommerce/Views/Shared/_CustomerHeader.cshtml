@@ -1,55 +1,82 @@
 ﻿<header>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+    <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom shadow-sm mb-3 position-fixed w-100">
         <div class="container">
-            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
-                <img src="~/images/logo.png" alt="ShoeStore" height="40" />
+            <a class="navbar-brand" asp-controller="Home" asp-action="Index">
+                <img src="~/img/logo/t-soleking-logo.png" class="img-fluid rounded-circle logo-header" alt="ShoeStore" width="45" height="40" />
+                <span class="ms-2 d-sm-inline fw-bold">TSOLEKING</span>
             </a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse">
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+
+            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between" id="navbarContent">
                 <ul class="navbar-nav flex-grow-1">
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-controller="Home" asp-action="Index">Trang chủ</a>
+                        <a class="nav-link text-dark @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Home" && ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")"
+                           asp-controller="Home" asp-action="Index">Trang chủ</a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown">
+                        <a class="nav-link dropdown-toggle text-dark @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Products" ? "active" : "") nav-product-link"
+                           asp-controller="Products" asp-action="Index" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Sản phẩm
                         </a>
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" href="#">Giày nam</a>
-                            <a class="dropdown-item" href="#">Giày nữ</a>
-                            <a class="dropdown-item" href="#">Giày thể thao</a>
-                        </div>
+                        @await Component.InvokeAsync("CategoryMenu")
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-controller="Blog" asp-action="Index">Tin tức</a>
+                        <a class="nav-link text-dark @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Blog" ? "active" : "")"
+                           asp-controller="Blog" asp-action="Index">Tin tức</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-controller="Contact" asp-action="Index">Liên hệ</a>
+                        <a class="nav-link text-dark @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Contact" ? "active" : "")"
+                           asp-controller="Contact" asp-action="Index">Liên hệ</a>
                     </li>
                 </ul>
-                <div class="d-flex">
-                    <div class="input-group mr-3">
+
+                <div class="d-flex align-items-center">
+                    <div class="input-group me-3">
                         <input type="text" class="form-control" placeholder="Tìm kiếm...">
-                        <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="button">
-                                <i class="fas fa-search"></i>
-                            </button>
-                        </div>
+                        <button class="btn btn-outline-secondary search-btn" type="button">
+                            <i class="fas fa-search"></i>
+                        </button>
                     </div>
-                    <div class="mr-3">
-                        <a href="#" class="text-dark"><i class="fas fa-heart fa-lg"></i></a>
-                    </div>
-                    <div class="mr-3">
+
+                    <div class="mr-2 me-4">
                         <a asp-controller="Cart" asp-action="Index" class="text-dark position-relative">
                             <i class="fas fa-shopping-cart fa-lg"></i>
-                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                3
-                            </span>
                         </a>
                     </div>
-                    <partial name="_CustomerLogin" />
+
+                    <div>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <div class="dropdown">
+                                <button class="btn dropdown-toggle d-flex align-items-center" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                    @{
+                                        var userName = User.Identity.Name;
+                                        var firstLetter = !string.IsNullOrEmpty(userName) ? userName[0].ToString().ToUpper() : "U";
+                                    }
+                                    <div class="avatar-circle me-2" style="width: 36px; height: 36px; background-color: #007bff; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">
+                                        @firstLetter
+                                    </div>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                    <li><span class="dropdown-item-text fw-bold">@User.Identity.Name</span></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" asp-controller="Account" asp-action="Profile">Tài khoản</a></li>
+                                    <li>
+                                        <form asp-controller="AuthCustomer" asp-action="Logout" method="post">
+                                            <button type="submit" class="dropdown-item">Đăng xuất</button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </div>
+                        }
+                        else
+                        {
+                            <a asp-controller="AuthCustomer" asp-action="Login" class="btn btn-sm text-nowrap" style="background-color: #000000; color: white;">Đăng nhập</a>
+                        }
+                    </div>
                 </div>
             </div>
         </div>

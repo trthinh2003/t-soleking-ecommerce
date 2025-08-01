@@ -1,6 +1,6 @@
 ﻿@model SoleKingECommerce.ViewModels.Import.ImportItemViewModel
 @{
-    var index = ViewBag.ItemIndex ?? 0;
+    var index = Model.Index;
 }
 
 <div class="product-item card mb-3" data-index="@index">
@@ -12,28 +12,28 @@
     </div>
     <div class="card-body">
         <div class="row g-3">
-            <!-- Row 1: Product Info -->
+            <!-- Product Basic Info -->
             <div class="col-md-5">
-                <label class="form-label small fw-bold" for="Items_@(index)__ProductName">
+                <label class="form-label small fw-bold">
                     <i class="fas fa-cube me-1"></i>Tên sản phẩm
                 </label>
-                <input name="Items[@index].ProductName" id="Items_@(index)__ProductName" type="text" class="form-control form-control-sm"
+                <input name="Items[@index].ProductName" type="text" class="form-control form-control-sm"
                        value="@Model.ProductName" placeholder="Nhập tên sản phẩm" />
             </div>
             <div class="col-md-3">
-                <label class="form-label small fw-bold" for="Items_@(index)__Brand">
+                <label class="form-label small fw-bold">
                     <i class="fas fa-tag me-1"></i>Thương hiệu
                 </label>
-                <input name="Items[@index].Brand" id="Items_@(index)__Brand" type="text" class="form-control form-control-sm"
+                <input name="Items[@index].Brand" type="text" class="form-control form-control-sm"
                        value="@Model.Brand" placeholder="Thương hiệu" />
             </div>
             <div class="col-md-4">
-                <label class="form-label small fw-bold" for="Items_@(index)__CategoryId">
+                <label class="form-label small fw-bold">
                     <i class="fas fa-layer-group me-1"></i>Danh mục
                 </label>
-                <select name="Items[@index].CategoryId" id="Items_@(index)__CategoryId" class="form-select form-select-sm">
+                <select name="Items[@index].CategoryId" class="form-select form-select-sm">
                     <option value="">-- Chọn --</option>
-                    @foreach (var category in ViewBag.Categories as IEnumerable<SoleKingECommerce.Models.Category>)
+                    @foreach (var category in ViewBag.Categories)
                     {
                         <option value="@category.Id" selected="@(Model.CategoryId == category.Id ? "selected" : null)">
                             @category.Name
@@ -42,74 +42,168 @@
                 </select>
             </div>
 
-            <!-- Row 2: Specifications -->
-            <div class="col-md-3">
-                <label class="form-label small fw-bold" for="Items_@(index)__ColorId">
-                    <i class="fas fa-palette me-1"></i>Màu sắc
+            <!-- Product Images -->
+            <div class="col-md-12">
+                <label class="form-label small fw-bold">
+                    <i class="fas fa-images me-1"></i>Hình ảnh sản phẩm
                 </label>
-                <select name="Items[@index].ColorId" id="Items_@(index)__ColorId" class="form-select form-select-sm">
-                    <option value="">-- Chọn --</option>
-                    @foreach (var color in ViewBag.Colors as IEnumerable<SoleKingECommerce.Models.Color>)
+                <div class="mb-3">
+                    <input type="file" name="Items[@index].Images" multiple accept="image/*" 
+                    class="form-control form-control-sm image-upload" data-index="@index" />
+                </div>
+                <div class="image-preview-container row g-2" id="imagePreviewContainer-@index">
+                    @foreach (var imgUrl in Model.PreviewImageUrls)
                     {
-                        <option value="@color.Id" selected="@(Model.ColorId == color.Id ? "selected" : null)">
-                            @color.Name
-                        </option>
+                        <div class="col-3 col-md-2">
+                            <div class="image-preview-item">
+                                <img src="@imgUrl" class="img-thumbnail" />
+                                <button type="button" class="btn btn-sm btn-danger remove-image-btn">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
                     }
-                </select>
-            </div>
-            <div class="col-md-2">
-                <label class="form-label small fw-bold" for="Items_@(index)__Size">
-                    <i class="fas fa-ruler me-1"></i>Size
-                </label>
-                <input name="Items[@index].Size" id="Items_@(index)__Size" type="text" class="form-control form-control-sm"
-                       value="@Model.Size" placeholder="Size" />
-            </div>
-            <div class="col-md-2">
-                <label class="form-label small fw-bold" for="Items_@(index)__Quantity">
-                    <i class="fas fa-boxes me-1"></i>Số lượng
-                </label>
-                <input name="Items[@index].Quantity" id="Items_@(index)__Quantity" type="number" class="form-control form-control-sm quantity-input"
-                       value="@Model.Quantity" min="1" placeholder="0" />
+                </div>
             </div>
 
-            <!-- Row 3: Pricing -->
-            <div class="col-md-3">
-                <label class="form-label small fw-bold" for="Items_@(index)__ImportPrice">
+            <!-- Specifications Section -->
+            <div class="col-md-12">
+                <label class="form-label small fw-bold">
+                    <i class="fas fa-list-alt me-1"></i>Thông số kỹ thuật
+                </label>
+                <div class="specifications-container mb-3">
+                    @if (Model.Specifications != null && Model.Specifications.Any())
+                    {
+                        @for (int i = 0; i < Model.Specifications.Count; i++)
+                        {
+                            var spec = Model.Specifications[i];
+                            if (!string.IsNullOrEmpty(spec))
+                            {
+                                var parts = spec.Split('-');
+                                if (parts.Length >= 3 && int.TryParse(parts[0], out int colorId) && int.TryParse(parts[2], out int quantity))
+                                {
+                                    var size = parts[1];
+
+                                    // Tìm thông tin màu từ ViewBag.Colors
+                                    var colorName = "N/A";
+                                    var colorHex = "#CCCCCC"; // Default color
+                                    if (ViewBag.Colors != null)
+                                    {
+                                        var colors = ViewBag.Colors as IEnumerable<SoleKingECommerce.Models.Color>;
+                                        var color = colors?.FirstOrDefault(c => c.Id == colorId);
+                                        if (color != null)
+                                        {
+                                            colorName = color.Name;
+                                            colorHex = color.Hex;
+                                        }
+                                    }
+
+                                    <div class="spec-item mb-2">
+                                        <div class="d-flex align-items-center">
+                                            <!-- Hiển thị color square -->
+                                            <div class="color-square me-2" style="width: 20px; height: 20px; background-color: @colorHex; border: 1px solid #ccc; border-radius: 3px;"></div>
+                                            <span class="badge bg-primary me-2 flex-grow-1">
+                                                Màu: @colorName (@colorHex) - Size: @size - Số lượng: @quantity
+                                            </span>
+                                            <button type="button" class="btn btn-sm btn-outline-danger remove-spec-btn">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        </div>
+                                        <input type="hidden" name="Items[@index].Specifications[@i]" value="@spec" />
+                                    </div>
+                                }
+                                else
+                                {
+                                    <!-- Debug info for invalid specs -->
+                                    <div class="alert alert-warning alert-sm">
+                                        <small>Invalid spec format: @spec</small>
+                                    </div>
+                                }
+                            }
+                        }
+                    }
+                </div>
+                <button type="button" class="btn btn-sm btn-outline-primary add-spec-btn">
+                    <i class="fas fa-plus me-1"></i>Thêm thông số
+                </button>
+            </div>
+
+            <!-- Pricing -->
+            <div class="col-md-4">
+                <label class="form-label small fw-bold">
                     <i class="fas fa-money-bill-wave me-1"></i>Giá nhập
                 </label>
                 <div class="input-group input-group-sm">
-                    <input name="Items[@index].ImportPrice" id="Items_@(index)__ImportPrice" type="number" class="form-control price-input"
+                    <input name="Items[@index].ImportPrice" type="number"
+                           class="form-control price-input"
                            value="@Model.ImportPrice" step="0.01" min="0" placeholder="0" />
                     <span class="input-group-text">đ</span>
                 </div>
             </div>
-            <div class="col-md-2">
-                <label class="form-label small fw-bold" for="Items_@(index)__SellPrice">
-                    <i class="fas fa-tags me-1"></i>Giá bán
-                </label>
-                <div class="input-group input-group-sm">
-                    <input name="Items[@index].SellPrice" id="Items_@(index)__SellPrice" type="number" class="form-control"
-                           value="@Model.SellPrice" step="0.01" min="0" placeholder="0" />
-                    <span class="input-group-text">đ</span>
-                </div>
-            </div>
 
-            <!-- Row 4: Description -->
+            <!-- Description -->
             <div class="col-md-12">
-                <label class="form-label small fw-bold" for="Items_@(index)__Description">
+                <label class="form-label small fw-bold">
                     <i class="fas fa-align-left me-1"></i>Mô tả
                 </label>
-                <textarea name="Items[@index].Description" id="Items_@(index)__Description" class="form-control form-control-sm"
+                <textarea name="Items[@index].Description" class="form-control form-control-sm"
                           rows="2" placeholder="Mô tả sản phẩm">@Model.Description</textarea>
             </div>
         </div>
-        <div class="row mt-3">
-            <div class="col-md-12 text-end">
-                <div class="item-total-box">
-                    <span class="me-2 small">Thành tiền:</span>
-                    <span class="item-total fw-bold text-primary">0đ</span>
-                </div>
+        <div class="col-md-12 text-end">
+            <div class="item-total-box">
+                <span class="me-2 small">Thành tiền:</span>
+                <span class="item-total fw-bold text-primary">
+                    @((Model.ImportPrice * Model.ParsedSpecifications.Sum(s => s.Quantity)).ToString("N0"))đ
+                </span>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Specification Modal Template -->
+@* <div class="modal fade" id="specModalTemplate"> *@
+@*     <div class="modal-dialog modal-dialog-centered"> *@
+@*         <div class="modal-content"> *@
+@*             <div class="modal-header"> *@
+@*                 <h5 class="modal-title">Thêm thông số sản phẩm</h5> *@
+@*                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> *@
+@*             </div> *@
+@*             <div class="modal-body"> *@
+@*                 <div class="mb-3"> *@
+@*                     <label class="form-label">Màu sắc:</label> *@
+@*                     <select class="form-select modal-color-select"> *@
+@*                         <option value="">-- Chọn màu --</option> *@
+@*                         @foreach (var color in ViewBag.Colors as IEnumerable<SoleKingECommerce.Models.Color>) *@
+@*                         { *@
+@*                             <option value="@color.Id" data-name="@color.Name" data-hex="@color.Hex"> *@
+@*                                 <span class="color-option"> *@
+@*                                     @color.Name (@color.Hex) *@
+@*                                 </span> *@
+@*                             </option> *@
+@*                         } *@
+@*                     </select> *@
+@*                     <!-- Hiển thị preview màu --> *@
+@*                     <div class="color-preview mt-2" id="colorPreview" style="display: none;"> *@
+@*                         <div class="d-flex align-items-center"> *@
+@*                             <div class="color-square me-2" id="colorSquare" style="width: 20px; height: 20px; border: 1px solid #ccc; border-radius: 3px;"></div> *@
+@*                             <span id="colorInfo"></span> *@
+@*                         </div> *@
+@*                     </div> *@
+@*                 </div> *@
+@*                 <div class="mb-3"> *@
+@*                     <label class="form-label">Size:</label> *@
+@*                     <input type="text" class="form-control modal-size-input"> *@
+@*                 </div> *@
+@*                 <div class="mb-3"> *@
+@*                     <label class="form-label">Số lượng:</label> *@
+@*                     <input type="number" class="form-control modal-quantity-input" min="1" value="1"> *@
+@*                 </div> *@
+@*             </div> *@
+@*             <div class="modal-footer"> *@
+@*                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button> *@
+@*                 <button type="button" class="btn btn-primary confirm-spec-btn">Xác nhận</button> *@
+@*             </div> *@
+@*         </div> *@
+@*     </div> *@
+@* </div> *@
