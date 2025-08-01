@@ -2,8 +2,6 @@
 using SoleKingECommerce.Repositories.Interfaces;
 using SoleKingECommerce.Services.Interfaces;
 using SoleKingECommerce.ViewModels.Import;
-using System.Text.RegularExpressions;
-using System.Text;
 using Microsoft.EntityFrameworkCore;
 using SoleKingECommerce.Data;
 using SoleKingECommerce.Helpers;
@@ -155,7 +153,7 @@ namespace SoleKingECommerce.Services.Implementations
                             CategoryId = itemModel.CategoryId,
                             Description = itemModel.Description,
                             BasePrice = 0.0m,
-                            Slug = GenerateSlug(itemModel.ProductName),
+                            Slug = SlugHelper.GenerateSlug(itemModel.ProductName),
                             CreatedAt = DateTime.Now,
                             UpdatedAt = DateTime.Now
                         };
@@ -359,7 +357,6 @@ namespace SoleKingECommerce.Services.Implementations
             }
         }
 
-
         public async Task DeleteImportAsync(int id)
         {
             await _importRepository.DeleteAsync(id);
@@ -422,48 +419,7 @@ namespace SoleKingECommerce.Services.Implementations
         {
             return await _productRepository.GetSuppliersAsync();
         }
-
-        private string GenerateSlug(string name)
-        {
-            var vietnameseMap = new Dictionary<char, char>
-            {
-                ['á'] = 'a', ['à'] = 'a', ['ả'] = 'a', ['ã'] = 'a', ['ạ'] = 'a',
-                ['â'] = 'a', ['ấ'] = 'a', ['ầ'] = 'a', ['ẫ'] = 'a', ['ậ'] = 'a',
-                ['ă'] = 'a', ['ắ'] = 'a', ['ằ'] = 'a', ['ẳ'] = 'a', ['ẵ'] = 'a',
-                ['ặ'] = 'a', ['é'] = 'e', ['è'] = 'e', ['ẻ'] = 'e', ['ẽ'] = 'e', 
-                ['ẹ'] = 'e', ['ê'] = 'e', ['ế'] = 'e', ['ề'] = 'e', ['ể'] = 'e',
-                ['ễ'] = 'e', ['ệ'] = 'e', ['í'] = 'i', ['ì'] = 'i', ['ỉ'] = 'i', 
-                ['ĩ'] = 'i', ['ị'] = 'i', ['ó'] = 'o', ['ò'] = 'o', ['ỏ'] = 'o',
-                ['õ'] = 'o', ['ọ'] = 'o', ['ô'] = 'o', ['ố'] = 'o', ['ồ'] = 'o',
-                ['ổ'] = 'o', ['ỗ'] = 'o', ['ộ'] = 'o', ['ơ'] = 'o', ['ớ'] = 'o',
-                ['ờ'] = 'o', ['ở'] = 'o', ['ỡ'] = 'o', ['ợ'] = 'o', ['ú'] = 'u',
-                ['ù'] = 'u', ['ủ'] = 'u', ['ũ'] = 'u', ['ụ'] = 'u', ['ư'] = 'u',
-                ['ứ'] = 'u', ['ừ'] = 'u', ['ử'] = 'u', ['ữ'] = 'u', ['ự'] = 'u',
-                ['ý'] = 'y', ['ỳ'] = 'y', ['ỷ'] = 'y', ['ỹ'] = 'y', ['ỵ'] = 'y',
-                ['đ'] = 'd'
-            };
-
-            var sb = new StringBuilder();
-            foreach (var ch in name.ToLower())
-            {
-                if (vietnameseMap.ContainsKey(ch))
-                    sb.Append(vietnameseMap[ch]);
-                else if (char.IsLetterOrDigit(ch))
-                    sb.Append(ch);
-                else if (char.IsWhiteSpace(ch))
-                    sb.Append('-');
-                // bỏ qua ký tự đặc biệt khác
-            }
-
-            var result = sb.ToString();
-
-            // loại bỏ dấu - đầu/cuối và dấu - trùng lặp
-            result = Regex.Replace(result, "-{2,}", "-").Trim('-');
-
-            return result;
-        }
-
-
+       
         private string GenerateSKU(string productName, string size, int colorId)
         {
             var shortName = string.Join("", productName.Split(' ').Select(w => w.FirstOrDefault()).Take(3));
@@ -862,7 +818,7 @@ namespace SoleKingECommerce.Services.Implementations
                 {
                     container.Page(page =>
                     {
-                        page.Size(PageSizes.A4.Landscape());
+                        page.Size(PageSizes.A4.Portrait());
                         page.Margin(20, Unit.Millimetre);
                         page.PageColor(Colors.White);
                         page.DefaultTextStyle(vietnameseFont.FontSize(10));

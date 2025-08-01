@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Http.Features;
+﻿using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
 using SoleKingECommerce.Configurations;
 using SoleKingECommerce.Data;
 using SoleKingECommerce.Models;
@@ -14,11 +16,15 @@ namespace SoleKingECommerce
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
+            builder.Services.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = builder.Configuration["Redis:ConnectionString"];
+                options.InstanceName = builder.Configuration["Redis:InstanceName"];
+            });
 
             // Dành cho API
             builder.Services.AddControllers()
@@ -36,18 +42,34 @@ namespace SoleKingECommerce
                 options.UseSqlServer(connectionString);
             });
 
+            // Session
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
+            builder.Services.AddHttpContextAccessor();
+
             // Repositories & Services
             builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
             builder.Services.AddScoped<ISupplierRepository, SupplierRepository>();
             builder.Services.AddScoped<IImportRepository, ImportRepository>();
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
+            builder.Services.AddScoped<IVoucherRepository, VoucherRepository>();
             builder.Services.AddScoped<IColorRepository, ColorRepository>();
             builder.Services.AddScoped<IProductVariantRepository, ProductVariantRepository>();
+            builder.Services.AddScoped<ICartRepository, CartRepository>();
 
             builder.Services.AddScoped<ICategoryService, CategoryService>();
+            builder.Services.AddScoped<IProductService, ProductService>();
+            builder.Services.AddScoped<IVoucherService, VoucherService>();
             builder.Services.AddScoped<IColorService, ColorService>();
             builder.Services.AddScoped<ISupplierService, SupplierService>();
             builder.Services.AddScoped<IImportService, ImportService>();
+            builder.Services.AddScoped<ICartService, CartService>();
+            builder.Services.AddScoped<IOrderService, OrderService>();
+            builder.Services.AddScoped<IVnPayService, VnPayService>();
 
             builder.Services.AddSingleton<ILocalStorageService, LocalStorageService>(); // Dành cho upload file
 
@@ -113,6 +135,7 @@ namespace SoleKingECommerce
             app.UseStaticFiles();
 
             app.UseRouting();
+            app.UseSession();
 
             app.UseAuthentication();
             app.UseAuthorization();
@@ -121,7 +144,44 @@ namespace SoleKingECommerce
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=Home}/{action=Index}/{id?}"
+            );
+
+            // Test thử kết nối đến Redis
+            using (var scope = app.Services.CreateScope())
+            {
+                var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+                try
+                {
+                    var cache = scope.ServiceProvider.GetRequiredService<IDistributedCache>();
+                    await cache.SetStringAsync("test_connection", "OK", new DistributedCacheEntryOptions
+                    {
+                        AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(10)
+                    });
+                    logger.LogInformation("Kết nối Redis thành công");
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError(ex, "Không thể kết nối đến Redis");
+                }
+            }
+
+            // Seed Role
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                try
+                {
+                    var userManager = services.GetRequiredService<UserManager<User>>();
+                    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+                    await RoleInitializer.InitializeAsync(userManager, roleManager);
+                }
+                catch (Exception ex)
+                {
+                    var logger = services.GetRequiredService<ILogger<Program>>();
+                    logger.LogError(ex, "An error occurred while seeding the database roles.");
+                }
+            }
 
             app.Run();
         }

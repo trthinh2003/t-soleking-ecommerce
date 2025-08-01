@@ -1,0 +1,303 @@
+﻿@using SoleKingECommerce.Helpers
+@using SoleKingECommerce.ViewModels.Voucher
+@model PaginatedList<VoucherViewModel>
+@{
+    ViewData["Title"] = "Quản lý Mã giảm giá";
+    Layout = "_AdminLayout";
+}
+
+<div class="page-header flex-row">
+    <form method="get" asp-action="Index" class="d-flex align-items-center w-75" style="gap: 1rem;">
+        <input type="text"
+               name="searchString"
+               value="@ViewData["CurrentFilter"]"
+               class="form-control"
+               placeholder="Tìm kiếm mã giảm giá..."
+               style="max-width: 300px;" />
+
+        <select name="status" class="form-control" style="max-width: 250px;">
+            <option value="">-- Tất cả trạng thái --</option>
+            <option value="active" selected="@(ViewData["CurrentStatus"]?.ToString() == "active")">Đang hoạt động</option>
+            <option value="upcoming" selected="@(ViewData["CurrentStatus"]?.ToString() == "upcoming")">Sắp diễn ra</option>
+            <option value="expired" selected="@(ViewData["CurrentStatus"]?.ToString() == "expired")">Đã hết hạn</option>
+        </select>
+
+        <button type="submit" class="btn btn-outline-primary">
+            <i class="fas fa-search"></i> <span class="d-none d-md-inline text-nowrap">Tìm kiếm</span>
+        </button>
+    </form>
+    <a asp-action="Create" class="btn btn-primary mt-3">
+        <i class="fas fa-plus"></i> <span class="d-none d-md-inline">Thêm mã giảm giá</span>
+    </a>
+</div>
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+<!-- Thống kê nhanh -->
+<div class="row mb-4">
+    <div class="col-md-3 col-sm-6">
+        <div class="card text-center border-primary">
+            <div class="card-body">
+                <i class="fas fa-percentage text-primary mb-2" style="font-size: 2rem;"></i>
+                <h5 class="card-title">Tổng số mã</h5>
+                <p class="card-text h4">@Model.TotalCount</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="card text-center border-success">
+            <div class="card-body">
+                <i class="fas fa-check-circle text-success mb-2" style="font-size: 2rem;"></i>
+                <h5 class="card-title">Đang hoạt động</h5>
+                <p class="card-text h4">@Model.Count(v => v.Status == "Đang hoạt động")</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="card text-center border-warning">
+            <div class="card-body">
+                <i class="fas fa-clock text-warning mb-2" style="font-size: 2rem;"></i>
+                <h5 class="card-title">Sắp diễn ra</h5>
+                <p class="card-text h4">@Model.Count(v => v.Status == "Sắp diễn ra")</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="card text-center border-danger">
+            <div class="card-body">
+                <i class="fas fa-times-circle text-danger mb-2" style="font-size: 2rem;"></i>
+                <h5 class="card-title">Đã hết hạn</h5>
+                <p class="card-text h4">@Model.Count(v => v.Status == "Hết hạn")</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body overflow-auto">
+        <table class="table table-hover table-striped">
+            <thead>
+                <tr>
+                    <th>Mã giảm giá</th>
+                    <th>Mô tả</th>
+                    <th class="text-center">Giảm giá</th>
+                    <th class="text-center">Giảm tối đa</th>
+                    <th class="text-center">Đơn tối thiểu</th>
+                    <th class="text-center">Thời gian</th>
+                    <th class="text-center">Sử dụng</th>
+                    <th class="text-center">Trạng thái</th>
+                    <th class="text-center">Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="fw-bold">
+                            <span class="badge bg-secondary">@item.Code</span>
+                        </td>
+                        <td>@(item.Description?.Length > 30 ? item.Description.Substring(0, 30) + "..." : item.Description)</td>
+                        <td class="text-center">
+                            <span class="badge bg-info">@item.DiscountPercent%</span>
+                        </td>
+                        <td class="text-center">
+                            <span class="text-success fw-bold">@item.MaxDiscount.ToString("N0") VND</span>
+                        </td>
+                        <td class="text-center">
+                            <span class="text-muted">@item.MinOrderAmount.ToString("N0") VND</span>
+                        </td>
+                        <td class="text-center">
+                            <small class="text-muted">
+                                @item.StartDate.ToString("dd/MM/yyyy") -<br />
+                                @item.EndDate.ToString("dd/MM/yyyy")
+                            </small>
+                        </td>
+                        <td class="text-center">
+                            <span class="badge @(item.UsageCount >= item.UsageLimit ? "bg-danger" : "bg-primary")">
+                                @item.UsageCount/@item.UsageLimit
+                            </span>
+                        </td>
+                        <td class="text-center">
+                            @if (item.Status == "Đang hoạt động")
+                            {
+                                <span class="badge bg-success">@item.Status</span>
+                            }
+                            else if (item.Status == "Sắp diễn ra")
+                            {
+                                <span class="badge bg-warning">@item.Status</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">@item.Status</span>
+                            }
+                        </td>
+                        <td class="text-center">
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning" style="color: coral;" title="Chỉnh sửa">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info" title="Chi tiết">
+                                <i class="fas fa-info-circle"></i>
+                            </a>
+                            <button type="button" class="btn btn-sm btn-outline-danger delete-btn" data-id="@item.Id" title="Xóa">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        @if (!Model.Any())
+        {
+            <div class="text-center py-4">
+                <i class="fas fa-percentage text-muted" style="font-size: 3rem;"></i>
+                <h5 class="mt-3 text-muted">Chưa có mã giảm giá nào</h5>
+                <p class="text-muted">Hãy tạo mã giảm giá đầu tiên của bạn!</p>
+                <a asp-action="Create" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Tạo mã giảm giá
+                </a>
+            </div>
+        }
+    </div>
+</div>
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<div class="d-flex justify-content-center mt-3">
+    <nav>
+        <ul class="pagination">
+            <li class="page-item @prevDisabled">
+                <a asp-action="Index"
+                   asp-route-pageNumber="1"
+                   asp-route-searchString="@ViewData["CurrentFilter"]"
+                   asp-route-status="@ViewData["CurrentStatus"]"
+                   class="page-link">
+                    &laquo;&laquo;
+                </a>
+            </li>
+            <li class="page-item @prevDisabled">
+                <a asp-action="Index"
+                   asp-route-pageNumber="@(Model.PageIndex - 1)"
+                   asp-route-searchString="@ViewData["CurrentFilter"]"
+                   asp-route-status="@ViewData["CurrentStatus"]"
+                   class="page-link">
+                    &laquo;
+                </a>
+            </li>
+
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.PageIndex ? "active" : "")">
+                    <a asp-action="Index"
+                       asp-route-pageNumber="@i"
+                       asp-route-searchString="@ViewData["CurrentFilter"]"
+                       asp-route-status="@ViewData["CurrentStatus"]"
+                       class="page-link">
+                        @i
+                    </a>
+                </li>
+            }
+
+            <li class="page-item @nextDisabled">
+                <a asp-action="Index"
+                   asp-route-pageNumber="@(Model.PageIndex + 1)"
+                   asp-route-searchString="@ViewData["CurrentFilter"]"
+                   asp-route-status="@ViewData["CurrentStatus"]"
+                   class="page-link">
+                    &raquo;
+                </a>
+            </li>
+            <li class="page-item @nextDisabled">
+                <a asp-action="Index"
+                   asp-route-pageNumber="@Model.TotalPages"
+                   asp-route-searchString="@ViewData["CurrentFilter"]"
+                   asp-route-status="@ViewData["CurrentStatus"]"
+                   class="page-link">
+                    &raquo;&raquo;
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('.delete-btn').click(function (e) {
+                e.preventDefault();
+                var id = $(this).data('id');
+                var url = '@Url.Action("Delete", "Vouchers")';
+                var token = $('input[name="__RequestVerificationToken"]').val();
+
+                Swal.fire({
+                    title: 'Xác nhận xóa',
+                    text: "Bạn có chắc chắn muốn xóa mã giảm giá này? Hành động này không thể hoàn tác!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Xóa',
+                    cancelButtonText: 'Hủy'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: url,
+                            type: 'POST',
+                            data: {
+                                __RequestVerificationToken: token,
+                                id: id
+                            },
+                            success: function (response) {
+                                if (response.success) {
+                                    Swal.fire({
+                                        title: 'Thành công!',
+                                        text: response.message,
+                                        icon: 'success',
+                                        confirmButtonText: 'OK'
+                                    }).then(() => {
+                                        location.reload();
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        title: 'Lỗi!',
+                                        text: response.message,
+                                        icon: 'error',
+                                        confirmButtonText: 'OK'
+                                    });
+                                }
+                            },
+                            error: function (xhr) {
+                                Swal.fire({
+                                    title: 'Lỗi!',
+                                    text: 'Có lỗi xảy ra khi kết nối đến server',
+                                    icon: 'error',
+                                    confirmButtonText: 'OK'
+                                });
+                            }
+                        });
+                    }
+                });
+            });
+
+            // Tự động ẩn thông báo sau 3 giây
+            setTimeout(function () {
+                $('.alert').fadeOut('slow');
+            }, 3000);
+        });
+    </script>
+}

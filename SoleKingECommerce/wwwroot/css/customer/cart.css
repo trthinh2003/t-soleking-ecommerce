@@ -1,0 +1,214 @@
+﻿/* Cart Icon Styles */
+.cart-icon-container {
+    position: fixed;
+    bottom: 30px;
+    left: 30px;
+    z-index: 999;
+}
+
+.cart-icon {
+    width: 60px;
+    height: 60px;
+    background-color: #1daa62;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+    .cart-icon:hover {
+        transform: scale(1.1);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    }
+
+.cart-count {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: #ff4757;
+    color: white;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: bold;
+}
+
+/* Cart Dropdown Styles */
+.cart-dropdown {
+    position: fixed;
+    bottom: 100px;
+    left: 30px;
+    width: 350px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+    .cart-dropdown.hidden {
+        display: none;
+    }
+
+.cart-container {
+    width: 100%;
+    background-color: white;
+    border-radius: 10px;
+}
+
+.cart-header {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 1;
+    border-radius: 10px 10px 0 0;
+}
+
+.cart-items {
+    padding: 15px;
+}
+
+.cart-item {
+    display: flex;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #f5f5f5;
+}
+
+.cart-item-img {
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-right: 15px;
+}
+
+.cart-item-details {
+    flex: 1;
+}
+
+.cart-item h6 {
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+}
+
+.cart-item-price {
+    font-weight: bold;
+    color: #1daa62;
+    margin-bottom: 8px;
+}
+
+.cart-item-actions {
+    display: flex;
+    align-items: center;
+}
+
+    .cart-item-actions button {
+        padding: 0.15rem 0.5rem;
+        margin-right: 5px;
+    }
+
+    .cart-item-actions .quantity {
+        margin: 0 8px;
+        min-width: 20px;
+        text-align: center;
+    }
+
+.cart-total {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
+    border-top: 1px solid #eee;
+    font-size: 1.1rem;
+}
+
+.cart-actions {
+    padding: 0 15px 15px;
+    text-align: center;
+}
+
+.empty-cart {
+    text-align: center;
+    padding: 30px 0;
+    color: #777;
+}
+
+    .empty-cart i {
+        font-size: 2rem;
+        margin-bottom: 10px;
+        color: #ddd;
+    }
+
+/* Flying Item Animation */
+.flying-item {
+    position: fixed;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: rgba(29, 170, 98, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+    .flying-item img {
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+
+/* Toast Notification Styles */
+.toast-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #333;
+    color: white;
+    padding: 15px 20px;
+    border-radius: 5px;
+    z-index: 10000;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+    .toast-notification.show {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    .toast-notification.success {
+        background-color: #28a745;
+    }
+
+    .toast-notification.error {
+        background-color: #dc3545;
+    }
+
+    .toast-notification.info {
+        background-color: #17a2b8;
+    }

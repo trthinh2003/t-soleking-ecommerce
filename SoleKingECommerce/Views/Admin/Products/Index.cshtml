@@ -1,0 +1,379 @@
+﻿@using SoleKingECommerce.Helpers
+@using SoleKingECommerce.ViewModels.Product
+@model PaginatedList<ProductListViewModel>
+@{
+    ViewData["Title"] = "Quản lý Sản phẩm";
+    Layout = "_AdminLayout";
+}
+
+@if (TempData["ErrorMessage"] != null || TempData["SuccessMessage"] != null)
+{
+    <span id="error-message" data-msg="@TempData["ErrorMessage"]"></span>
+    <span id="success-message" data-msg="@TempData["SuccessMessage"]"></span>
+}
+
+<div class="page-header flex-row">
+    <form method="get" asp-action="Index" class="d-flex align-items-center flex-wrap gap-2 w-100">
+        <div class="search-group">
+            <input type="text"
+                   name="searchString"
+                   value="@ViewData["CurrentFilter"]"
+                   class="form-control"
+                   placeholder="Tìm theo tên sản phẩm, thương hiệu..."
+                   aria-label="Tìm kiếm" 
+                   style="width: 300px;"
+            />
+        </div>
+
+        <div class="search-group">
+            <select name="categoryId" class="form-control" aria-label="Chọn danh mục">
+                <option value="">-- Tất cả danh mục --</option>
+                @foreach (var category in ViewBag.Categories)
+                {
+                    <option value="@category.Id" selected="@(ViewData["CurrentCategoryId"]?.ToString() == category.Id.ToString())">
+                        @category.Name
+                    </option>
+                }
+            </select>
+        </div>
+
+        <div class="search-group">
+            <select name="priceRange" class="form-control" aria-label="Khoảng giá">
+                <option value="">-- Tất cả mức giá --</option>
+                <option value="0-500000" selected="@(ViewData["CurrentPriceRange"] == "0-500000")">Dưới 500.000đ</option>
+                <option value="500000-1000000" selected="@(ViewData["CurrentPriceRange"] == "500000-1000000")">500.000đ - 1.000.000đ</option>
+                <option value="1000000-2000000" selected="@(ViewData["CurrentPriceRange"] == "1000000-2000000")">1.000.000đ - 2.000.000đ</option>
+                <option value="2000000-5000000" selected="@(ViewData["CurrentPriceRange"] == "2000000-5000000")">2.000.000đ - 5.000.000đ</option>
+                <option value="5000000-999999999" selected="@(ViewData["CurrentPriceRange"] == "5000000-999999999")">Trên 5.000.000đ</option>
+            </select>
+        </div>
+
+        <div class="search-group">
+            <button type="submit" class="btn btn-outline-primary" aria-label="Tìm kiếm">
+                <i class="fas fa-search"></i> <span class="d-none d-md-inline">Tìm kiếm</span>
+            </button>
+        </div>
+    </form>
+</div>
+
+<div class="card">
+    <div class="card-body overflow-auto">
+        <table class="table table-hover table-striped table-responsive">
+            <thead>
+                <tr>
+                    <th style="width: 80px;">Ảnh</th>
+                    <th>Tên sản phẩm</th>
+                    <th>Thương hiệu</th>
+                    <th>Danh mục</th>
+                    <th class="text-end">Giá niêm yết</th>
+                    <th class="text-center" style="width: 1%;">Số biến thể</th>
+                    <th class="text-center">Trạng thái</th>
+                    <th>Ngày tạo</th>
+                    <th class="text-center">Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @if (!string.IsNullOrEmpty(item.ImageUrl))
+                            {
+                                <img src="@item.ImageUrl" alt="@item.Name" class="img-thumbnail" style="width: 60px; height: 60px; object-fit: cover;" />
+                            }
+                            else
+                            {
+                                <div class="d-flex align-items-center justify-content-center bg-light" style="width: 60px; height: 60px; border-radius: 4px;">
+                                    <i class="fas fa-image text-muted"></i>
+                                </div>
+                            }
+                        </td>
+                        <td>
+                            <div class="fw-bold">@item.Name</div>
+                            @if (!string.IsNullOrEmpty(item.Description) && item.Description.Length > 50)
+                            {
+                                <small class="text-muted">@(item.Description.Substring(0, 50))...</small>
+                            }
+                            else if (!string.IsNullOrEmpty(item.Description))
+                            {
+                                <small class="text-muted">@item.Description</small>
+                            }
+                        </td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(item.Brand))
+                            {
+                                <span class="badge badge-info">@item.Brand</span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">--</span>
+                            }
+                        </td>
+                        <td>@item.CategoryName</td>
+                        <td class="text-end">
+                            @if (item.BasePrice.HasValue)
+                            {
+                                <span class="fw-bold text-nowrap">@item.BasePrice.Value.ToString("N0") đ</span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">--</span>
+                            }
+                        </td>
+                        <td class="text-center">
+                            <span class="badge badge-primary">@item.VariantCount</span>
+                        </td>
+                        <td class="text-center">
+                            @if (item.VariantCount > 0)
+                            {
+                                <span class="badge badge-success">
+                                    <i class="fas fa-check-circle"></i> Có sẵn
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-warning">
+                                    <i class="fas fa-exclamation-triangle"></i> Chưa có biến thể
+                                </span>
+                            }
+                        </td>
+                        <td>@item.CreatedAt.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td class="text-center">
+                            <div class="btn-group" role="group">
+                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info" title="Xem chi tiết">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning" title="Chỉnh sửa" style="color: coral;">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <button type="button" class="btn btn-sm btn-outline-danger delete-btn" data-id="@item.Id" title="Xóa">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        @if (!Model.Any())
+        {
+            <div class="text-center py-4">
+                <i class="fas fa-box-open fa-3x text-muted mb-3"></i>
+                <h5 class="text-muted">Không tìm thấy sản phẩm nào</h5>
+                <p class="text-muted">Thử thay đổi bộ lọc hoặc <a asp-action="Create" class="text-decoration-none">tạo sản phẩm mới</a></p>
+            </div>
+        }
+    </div>
+</div>
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+    var maxVisiblePages = 3;
+    var totalPages = Model.TotalPages;
+    var currentPage = Model.PageIndex;
+}
+
+<div class="d-flex justify-content-center mt-3">
+    <nav>
+        <ul class="pagination">
+            <!-- First Page -->
+            <li class="page-item @prevDisabled">
+                <a asp-action="Index"
+                   asp-route-pageNumber="1"
+                   asp-route-searchString="@ViewData["CurrentFilter"]"
+                   asp-route-categoryId="@ViewData["CurrentCategoryId"]"
+                   asp-route-priceRange="@ViewData["CurrentPriceRange"]"
+                   class="page-link">
+                    &laquo;&laquo;
+                </a>
+            </li>
+
+            <!-- Previous Page -->
+            <li class="page-item @prevDisabled">
+                <a asp-action="Index"
+                   asp-route-pageNumber="@(Model.PageIndex - 1)"
+                   asp-route-searchString="@ViewData["CurrentFilter"]"
+                   asp-route-categoryId="@ViewData["CurrentCategoryId"]"
+                   asp-route-priceRange="@ViewData["CurrentPriceRange"]"
+                   class="page-link">
+                    &laquo;
+                </a>
+            </li>
+
+            @{
+                var startPage = Math.Max(1, currentPage - maxVisiblePages);
+                var endPage = Math.Min(totalPages, currentPage + maxVisiblePages);
+
+                if (startPage > 1)
+                {
+                    <li class="page-item @(1 == currentPage ? "active" : "")">
+                        <a asp-action="Index"
+                           asp-route-pageNumber="1"
+                           asp-route-searchString="@ViewData["CurrentFilter"]"
+                           asp-route-categoryId="@ViewData["CurrentCategoryId"]"
+                           asp-route-priceRange="@ViewData["CurrentPriceRange"]"
+                           class="page-link">
+                            1
+                        </a>
+                    </li>
+
+                    if (startPage > 2)
+                    {
+                        <li class="page-item disabled">
+                            <span class="page-link">...</span>
+                        </li>
+                    }
+                }
+
+                for (int i = startPage; i <= endPage; i++)
+                {
+                    if (i == 1 && startPage > 1) continue;
+
+                    <li class="page-item @(i == currentPage ? "active" : "")">
+                        <a asp-action="Index"
+                           asp-route-pageNumber="@i"
+                           asp-route-searchString="@ViewData["CurrentFilter"]"
+                           asp-route-categoryId="@ViewData["CurrentCategoryId"]"
+                           asp-route-priceRange="@ViewData["CurrentPriceRange"]"
+                           class="page-link">
+                            @i
+                        </a>
+                    </li>
+                }
+
+                if (endPage < totalPages)
+                {
+                    if (endPage < totalPages - 1)
+                    {
+                        <li class="page-item disabled">
+                            <span class="page-link">...</span>
+                        </li>
+                    }
+
+                    <li class="page-item @(totalPages == currentPage ? "active" : "")">
+                        <a asp-action="Index"
+                           asp-route-pageNumber="@totalPages"
+                           asp-route-searchString="@ViewData["CurrentFilter"]"
+                           asp-route-categoryId="@ViewData["CurrentCategoryId"]"
+                           asp-route-priceRange="@ViewData["CurrentPriceRange"]"
+                           class="page-link">
+                            @totalPages
+                        </a>
+                    </li>
+                }
+            }
+
+            <!-- Next Page -->
+            <li class="page-item @nextDisabled">
+                <a asp-action="Index"
+                   asp-route-pageNumber="@(Model.PageIndex + 1)"
+                   asp-route-searchString="@ViewData["CurrentFilter"]"
+                   asp-route-categoryId="@ViewData["CurrentCategoryId"]"
+                   asp-route-priceRange="@ViewData["CurrentPriceRange"]"
+                   class="page-link">
+                    &raquo;
+                </a>
+            </li>
+
+            <!-- Last Page -->
+            <li class="page-item @nextDisabled">
+                <a asp-action="Index"
+                   asp-route-pageNumber="@Model.TotalPages"
+                   asp-route-searchString="@ViewData["CurrentFilter"]"
+                   asp-route-categoryId="@ViewData["CurrentCategoryId"]"
+                   asp-route-priceRange="@ViewData["CurrentPriceRange"]"
+                   class="page-link">
+                    &raquo;&raquo;
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+@section styles {
+    <link href="~/css/admin/product-index.css" rel="stylesheet" />
+}
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            var successMessage = $('#success-message').data('msg');
+            var errorMessage = $('#error-message').data('msg');
+            if (successMessage != null) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Thành công',
+                    text: successMessage
+                });
+            } else if (errorMessage != null) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Lỗi',
+                    text: errorMessage
+                });
+            }
+
+            $('.delete-btn').click(function (e) {
+                e.preventDefault();
+                var id = $(this).data('id');
+                var url = '@Url.Action("Delete", "Products")';
+                var token = $('input[name="__RequestVerificationToken"]').val();
+
+                Swal.fire({
+                    title: 'Xác nhận xóa',
+                    text: "Bạn có chắc chắn muốn xóa sản phẩm này? Tất cả biến thể và hình ảnh liên quan cũng sẽ bị xóa.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Xóa',
+                    cancelButtonText: 'Hủy'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: url,
+                            type: 'POST',
+                            data: {
+                                __RequestVerificationToken: token,
+                                id: id
+                            },
+                            success: function (response) {
+                                if (response.success) {
+                                    Swal.fire({
+                                        title: 'Thành công!',
+                                        text: response.message,
+                                        icon: 'success',
+                                        confirmButtonText: 'OK'
+                                    }).then(() => {
+                                        location.reload();
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        title: 'Lỗi!',
+                                        text: response.message,
+                                        icon: 'error',
+                                        confirmButtonText: 'OK'
+                                    });
+                                }
+                            },
+                            error: function (xhr) {
+                                Swal.fire({
+                                    title: 'Lỗi!',
+                                    text: 'Có lỗi xảy ra khi kết nối đến server',
+                                    icon: 'error',
+                                    confirmButtonText: 'OK'
+                                });
+                            }
+                        });
+                    }
+                });
+            });
+
+            setTimeout(function () {
+                $('.alert').fadeOut('slow');
+            }, 3000);
+        });
+    </script>
+}

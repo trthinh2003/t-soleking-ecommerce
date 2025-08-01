@@ -1,0 +1,46 @@
+﻿@model SoleKingECommerce.ViewModels.Cart.CartViewModel
+
+<div class="cart-container">
+    <div class="cart-header">
+        <h5>Giỏ hàng của bạn</h5>
+        <button type="button" class="btn-close" aria-label="Close"></button>
+    </div>
+
+    <div class="cart-items">
+        @if (Model.Items.Any())
+        {
+            foreach (var item in Model.Items)
+            {
+                <div class="cart-item" data-product-id="@item.ProductId">
+                    <img src="@item.ImageUrl" alt="@item.ProductName" class="cart-item-img">
+                    <div class="cart-item-details">
+                        <h6>@item.ProductName | Size: @item.Size | Màu: @item.ColorName</h6>
+                        <div class="cart-item-price">@item.Price.ToString("N0") đ x @item.Quantity</div>
+                        <div class="cart-item-actions">
+                            <button class="btn btn-sm btn-outline-secondary decrease-qty">-</button>
+                            <span class="quantity">@item.Quantity</span>
+                            <button class="btn btn-sm btn-outline-secondary increase-qty">+</button>
+                            <button class="btn btn-sm btn-danger remove-item">Xóa</button>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <div class="cart-total">
+                <strong>Tổng cộng:</strong>
+                <span>@Model.TotalPrice.ToString("N0") đ</span>
+            </div>
+
+            <div class="cart-actions">
+                <a href="@Url.Action("Index", "Cart")" class="btn btn-primary" style="background-color: #1daa62">Đến trang giỏ hàng</a>
+            </div>
+        }
+        else
+        {
+            <div class="empty-cart">
+                <i class="fas fa-shopping-cart"></i>
+                <p>Giỏ hàng của bạn đang trống</p>
+            </div>
+        }
+    </div>
+</div>

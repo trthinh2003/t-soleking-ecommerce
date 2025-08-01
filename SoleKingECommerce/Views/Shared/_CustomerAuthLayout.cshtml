@@ -1,0 +1,45 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="~/css/customer/auth.css" />
+</head>
+<body>
+    <!-- Animated background shapes -->
+    <div class="bg-shapes">
+        <div class="shape shape1"></div>
+        <div class="shape shape2"></div>
+        <div class="shape shape3"></div>
+        <div class="shape shape4"></div>
+        <div class="shape shape5"></div>
+    </div>
+
+    <!-- Floating shoe icons -->
+    <div class="shoe-icons">
+        <div class="shoe-icon shoe1">👟</div>
+        <div class="shoe-icon shoe2">👠</div>
+        <div class="shoe-icon shoe3">🥿</div>
+        <div class="shoe-icon shoe4">👢</div>
+        <div class="shoe-icon shoe5">🩴</div>
+        <div class="shoe-icon shoe6">👞</div>
+    </div>
+
+    <!-- Main auth container -->
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="logo">
+                <h1>T-SOLEKING</h1>
+                <p>@ViewData["SubTitle"]</p>
+            </div>
+
+            @RenderBody()
+        </div>
+    </div>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

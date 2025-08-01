@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SoleKingECommerce")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a55887154e4d632f31e4155afabec2b87a67a0b1")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+06f3183aef350e5f1dfdf3f0949c474ac76d5d36")]
 [assembly: System.Reflection.AssemblyProductAttribute("SoleKingECommerce")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SoleKingECommerce")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

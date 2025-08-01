@@ -17,5 +17,9 @@ namespace SoleKingECommerce.Services.Interfaces
         Task UpdateCategoryAsync(CategoryViewModel model);
         Task DeleteCategoryAsync(int id);
         Task<bool> CategoryExistsAsync(int id);
+
+        // Client
+        Task<IEnumerable<CategoryTreeViewModel>> GetCategoryTreeAsync();
+        Task<IEnumerable<CategoryTreeViewModel>> GetCachedCategoryTreeAsync();
     }
 }

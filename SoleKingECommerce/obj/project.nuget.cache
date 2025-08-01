@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "cJZyY1Ya/tA=",
+  "dgSpecHash": "GW2fFzKZ6sE=",
   "success": true,
   "projectFilePath": "E:\\ProjectCV\\shoes-ecommerce\\SoleKingECommerce\\SoleKingECommerce\\SoleKingECommerce.csproj",
   "expectedPackageFiles": [
@@ -113,6 +113,7 @@
     "C:\\Users\\THINH\\.nuget\\packages\\microsoft.entityframeworkcore.tools\\8.0.11\\microsoft.entityframeworkcore.tools.8.0.11.nupkg.sha512",
     "C:\\Users\\THINH\\.nuget\\packages\\microsoft.extensions.caching.abstractions\\8.0.0\\microsoft.extensions.caching.abstractions.8.0.0.nupkg.sha512",
     "C:\\Users\\THINH\\.nuget\\packages\\microsoft.extensions.caching.memory\\8.0.1\\microsoft.extensions.caching.memory.8.0.1.nupkg.sha512",
+    "C:\\Users\\THINH\\.nuget\\packages\\microsoft.extensions.caching.stackexchangeredis\\8.0.11\\microsoft.extensions.caching.stackexchangeredis.8.0.11.nupkg.sha512",
     "C:\\Users\\THINH\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\8.0.0\\microsoft.extensions.configuration.abstractions.8.0.0.nupkg.sha512",
     "C:\\Users\\THINH\\.nuget\\packages\\microsoft.extensions.dependencyinjection\\8.0.1\\microsoft.extensions.dependencyinjection.8.0.1.nupkg.sha512",
     "C:\\Users\\THINH\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\8.0.2\\microsoft.extensions.dependencyinjection.abstractions.8.0.2.nupkg.sha512",
@@ -163,6 +164,7 @@
     "C:\\Users\\THINH\\.nuget\\packages\\nuget.projectmodel\\6.11.0\\nuget.projectmodel.6.11.0.nupkg.sha512",
     "C:\\Users\\THINH\\.nuget\\packages\\nuget.protocol\\6.11.0\\nuget.protocol.6.11.0.nupkg.sha512",
     "C:\\Users\\THINH\\.nuget\\packages\\nuget.versioning\\6.11.0\\nuget.versioning.6.11.0.nupkg.sha512",
+    "C:\\Users\\THINH\\.nuget\\packages\\pipelines.sockets.unofficial\\2.2.8\\pipelines.sockets.unofficial.2.2.8.nupkg.sha512",
     "C:\\Users\\THINH\\.nuget\\packages\\questpdf\\2023.12.6\\questpdf.2023.12.6.nupkg.sha512",
     "C:\\Users\\THINH\\.nuget\\packages\\rbush.signed\\4.0.0\\rbush.signed.4.0.0.nupkg.sha512",
     "C:\\Users\\THINH\\.nuget\\packages\\sixlabors.fonts\\1.0.0\\sixlabors.fonts.1.0.0.nupkg.sha512",
@@ -170,6 +172,7 @@
     "C:\\Users\\THINH\\.nuget\\packages\\skiasharp.harfbuzz\\2.88.7\\skiasharp.harfbuzz.2.88.7.nupkg.sha512",
     "C:\\Users\\THINH\\.nuget\\packages\\skiasharp.nativeassets.macos\\2.88.7\\skiasharp.nativeassets.macos.2.88.7.nupkg.sha512",
     "C:\\Users\\THINH\\.nuget\\packages\\skiasharp.nativeassets.win32\\2.88.7\\skiasharp.nativeassets.win32.2.88.7.nupkg.sha512",
+    "C:\\Users\\THINH\\.nuget\\packages\\stackexchange.redis\\2.8.31\\stackexchange.redis.2.8.31.nupkg.sha512",
     "C:\\Users\\THINH\\.nuget\\packages\\system.buffers\\4.6.0\\system.buffers.4.6.0.nupkg.sha512",
     "C:\\Users\\THINH\\.nuget\\packages\\system.clientmodel\\1.0.0\\system.clientmodel.1.0.0.nupkg.sha512",
     "C:\\Users\\THINH\\.nuget\\packages\\system.codedom\\5.0.0\\system.codedom.5.0.0.nupkg.sha512",

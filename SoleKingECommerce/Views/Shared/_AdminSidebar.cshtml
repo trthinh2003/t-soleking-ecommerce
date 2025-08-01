@@ -1,11 +1,12 @@
 ﻿@{
     var isDashboardActive = ViewContext.RouteData.Values["Controller"]?.ToString() == "Dashboard";
     var isCategoriesActive = ViewContext.RouteData.Values["Controller"]?.ToString() == "Categories";
+    var isVouchersActive = ViewContext.RouteData.Values["Controller"]?.ToString() == "Vouchers";
 }
 
 <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
-        <img src="~/img/logo/t-soleking-logo.png" asp-append-version="true" alt="Logo" class="sidebar-logo" width="40"/>
+        <img src="~/img/logo/t-soleking-logo.png" asp-append-version="true" alt="Logo" class="sidebar-logo" width="40" />
         <h3>T-SoleKing Admin</h3>
         <i class="fas fa-times close-sidebar d-sm-none d-block"></i>
     </div>
@@ -69,12 +70,21 @@
         </div>
 
         <div class="menu-title">KHUYẾN MÃI</div>
-        <a asp-controller="Discounts" asp-action="Index" class="menu-item">
+        <div class="menu-item @(isVouchersActive ? "active" : "")" onclick="toggleDropdown('vouchers')">
             <div>
                 <i class="fas fa-fw fa-percentage"></i>
                 <span>Mã giảm giá</span>
             </div>
-        </a>
+            <i class="fas fa-fw fa-angle-right ml-auto" id="vouchers-arrow"></i>
+        </div>
+        <div class="menu-dropdown" id="vouchers-dropdown">
+            <a asp-controller="Vouchers" asp-action="Index" class="dropdown-item">
+                <span>Tất cả mã giảm giá</span>
+            </a>
+            <a asp-controller="Vouchers" asp-action="Create" class="dropdown-item">
+                <span>Thêm mã giảm giá</span>
+            </a>
+        </div>
 
         <div class="menu-title">QUẢN LÝ KHO HÀNG</div>
         <div class="menu-item" onclick="toggleDropdown('stocks')">

@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SoleKingECommerce.Data;
 using System.Linq;
 
 namespace SoleKingECommerce.Controllers.Admin
 {
+    [Authorize(Roles = "Admin")]
     [Route("admin/[controller]")]
     public class DashboardController : Controller
     {

@@ -1,0 +1,510 @@
+﻿@using SoleKingECommerce.ViewModels.Voucher
+@model VoucherViewModel
+@{
+    ViewData["Title"] = "Chi tiết mã giảm giá";
+    Layout = "_AdminLayout";
+}
+
+<div class="page-header">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-action="Index">Quản lý mã giảm giá</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Chi tiết mã giảm giá</li>
+        </ol>
+    </nav>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-info-circle text-info"></i>
+                    Thông tin mã giảm giá
+                </h5>
+                <div>
+                    @if (Model.Status == "Đang hoạt động")
+                    {
+                        <span class="badge bg-success fs-6">@Model.Status</span>
+                    }
+                    else if (Model.Status == "Sắp diễn ra")
+                    {
+                        <span class="badge bg-warning fs-6">@Model.Status</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger fs-6">@Model.Status</span>
+                    }
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="info-group mb-4">
+                            <label class="info-label">
+                                <i class="fas fa-tag text-primary"></i> Mã giảm giá:
+                            </label>
+                            <div class="info-value">
+                                <span class="badge bg-secondary fs-6">@Model.Code</span>
+                                <button class="btn btn-sm btn-outline-secondary ms-2" onclick="copyToClipboard('@Model.Code')" title="Sao chép mã">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-group mb-4">
+                            <label class="info-label">
+                                <i class="fas fa-percentage text-success"></i> Phần trăm giảm giá:
+                            </label>
+                            <div class="info-value">
+                                <span class="badge bg-info fs-6">@Model.DiscountPercent%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-group mb-4">
+                    <label class="info-label">
+                        <i class="fas fa-align-left text-secondary"></i> Mô tả:
+                    </label>
+                    <div class="info-value">
+                        <p class="mb-0">@Model.Description</p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="info-group mb-4">
+                            <label class="info-label">
+                                <i class="fas fa-money-bill-wave text-success"></i> Giảm giá tối đa:
+                            </label>
+                            <div class="info-value">
+                                <span class="text-success fw-bold fs-5">@Model.MaxDiscount.ToString("N0") VND</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-group mb-4">
+                            <label class="info-label">
+                                <i class="fas fa-shopping-cart text-warning"></i> Đơn hàng tối thiểu:
+                            </label>
+                            <div class="info-value">
+                                <span class="text-warning fw-bold fs-5">@Model.MinOrderAmount.ToString("N0") VND</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="info-group mb-4">
+                            <label class="info-label">
+                                <i class="fas fa-calendar-alt text-primary"></i> Ngày bắt đầu:
+                            </label>
+                            <div class="info-value">
+                                <span class="text-primary fw-bold">@Model.StartDate.ToString("dd/MM/yyyy HH:mm")</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-group mb-4">
+                            <label class="info-label">
+                                <i class="fas fa-calendar-times text-danger"></i> Ngày kết thúc:
+                            </label>
+                            <div class="info-value">
+                                <span class="text-danger fw-bold">@Model.EndDate.ToString("dd/MM/yyyy HH:mm")</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-group mb-4">
+                    <label class="info-label">
+                        <i class="fas fa-users text-info"></i> Sử dụng:
+                    </label>
+                    <div class="info-value">
+                        <div class="d-flex align-items-center">
+                            <span class="badge @(Model.UsageCount >= Model.UsageLimit ? "bg-danger" : "bg-primary") fs-6 me-3">
+                                @Model.UsageCount/@Model.UsageLimit
+                            </span>
+                            <div class="progress flex-grow-1" style="height: 20px;">
+                                <div class="progress-bar @(Model.UsageCount >= Model.UsageLimit ? "bg-danger" : "bg-primary")"
+                                     role="progressbar"
+                                     style="width: @(Model.UsageLimit > 0 ? (Model.UsageCount * 100 / Model.UsageLimit) : 0)%">
+                                    @(Model.UsageLimit > 0 ? Math.Round((double)Model.UsageCount * 100 / Model.UsageLimit, 1) : 0)%
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-group mb-4">
+                    <label class="info-label">
+                        <i class="fas fa-clock text-muted"></i> Thời gian còn lại:
+                    </label>
+                    <div class="info-value">
+                        <span id="timeRemaining" class="fw-bold"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Thông tin bổ sung -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h6 class="card-title mb-0">
+                    <i class="fas fa-chart-line text-success"></i>
+                    Thống kê sử dụng
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-md-3">
+                        <div class="stat-item">
+                            <div class="stat-value text-primary">@Model.UsageCount</div>
+                            <div class="stat-label">Đã sử dụng</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-item">
+                            <div class="stat-value text-success">@(Model.UsageLimit - Model.UsageCount)</div>
+                            <div class="stat-label">Còn lại</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-item">
+                            <div class="stat-value text-info">@(Model.UsageLimit > 0 ? Math.Round((double)Model.UsageCount * 100 / Model.UsageLimit, 1) : 0)%</div>
+                            <div class="stat-label">Tỷ lệ sử dụng</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-item">
+                            <div class="stat-value text-warning">@((DateTime.Now - Model.StartDate).Days > 0 ? (DateTime.Now - Model.StartDate).Days : 0)</div>
+                            <div class="stat-label">Ngày hoạt động</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <!-- Hành động -->
+        <div class="card">
+            <div class="card-header">
+                <h6 class="card-title mb-0">
+                    <i class="fas fa-tools text-warning"></i>
+                    Hành động
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">
+                        <i class="fas fa-edit"></i> Chỉnh sửa
+                    </a>
+                    <button type="button" class="btn btn-danger delete-btn" data-id="@Model.Id">
+                        <i class="fas fa-trash-alt"></i> Xóa mã giảm giá
+                    </button>
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Quay lại danh sách
+                    </a>
+                </div>
+
+                <hr>
+
+                <div class="d-grid gap-2">
+                    <button type="button" class="btn btn-outline-primary" onclick="generateQRCode()">
+                        <i class="fas fa-qrcode"></i> Tạo mã QR
+                    </button>
+                    <button type="button" class="btn btn-outline-success" onclick="copyVoucherLink()">
+                        <i class="fas fa-link"></i> Sao chép liên kết
+                    </button>
+                    <button type="button" class="btn btn-outline-info" onclick="exportVoucherInfo()">
+                        <i class="fas fa-download"></i> Xuất thông tin
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tính toán mẫu -->
+        <div class="card mt-3">
+            <div class="card-header">
+                <h6 class="card-title mb-0">
+                    <i class="fas fa-calculator text-success"></i>
+                    Tính toán mẫu
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="form-group mb-3">
+                    <label class="form-label">Giá trị đơn hàng (VND):</label>
+                    <input type="number" id="orderValue" class="form-control" placeholder="Nhập giá trị đơn hàng" />
+                </div>
+
+                <div class="calculation-result">
+                    <div class="alert alert-info" id="calculationResult">
+                        <div class="d-flex justify-content-between">
+                            <span>Điều kiện:</span>
+                            <span id="conditionCheck">-</span>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span>Giảm giá:</span>
+                            <span id="discountAmount">0 VND</span>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span>Số tiền phải trả:</span>
+                            <span id="finalAmount">0 VND</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Thông tin khác -->
+        <div class="card mt-3">
+            <div class="card-header">
+                <h6 class="card-title mb-0">
+                    <i class="fas fa-info-circle text-info"></i>
+                    Thông tin bổ sung
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="info-item">
+                    <label>ID mã giảm giá:</label>
+                    <span class="text-muted">#@Model.Id</span>
+                </div>
+                <div class="info-item">
+                    <label>Trạng thái hoạt động:</label>
+                    <span class="@(Model.IsActive ? "text-success" : "text-danger")">
+                        @(Model.IsActive ? "Kích hoạt" : "Vô hiệu hóa")
+                    </span>
+                </div>
+                <div class="info-item">
+                    <label>Thời gian tổng:</label>
+                    <span class="text-muted">@((Model.EndDate - Model.StartDate).Days) ngày</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Tính toán thời gian còn lại
+            updateTimeRemaining();
+            setInterval(updateTimeRemaining, 60000); // Cập nhật mỗi phút
+
+            // Xử lý tính toán mẫu
+            $('#orderValue').on('input', calculateSample);
+
+            // Xử lý xóa
+            $('.delete-btn').click(function (e) {
+                e.preventDefault();
+                var id = $(this).data('id');
+                var url = '@Url.Action("Delete", "Vouchers")';
+                var token = $('input[name="__RequestVerificationToken"]').val();
+
+                Swal.fire({
+                    title: 'Xác nhận xóa',
+                    text: "Bạn có chắc chắn muốn xóa mã giảm giá này? Hành động này không thể hoàn tác!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Xóa',
+                    cancelButtonText: 'Hủy'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: url,
+                            type: 'POST',
+                            data: {
+                                __RequestVerificationToken: token,
+                                id: id
+                            },
+                            success: function (response) {
+                                if (response.success) {
+                                    Swal.fire({
+                                        title: 'Thành công!',
+                                        text: response.message,
+                                        icon: 'success',
+                                        confirmButtonText: 'OK'
+                                    }).then(() => {
+                                        window.location.href = '@Url.Action("Index", "Vouchers")';
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        title: 'Lỗi!',
+                                        text: response.message,
+                                        icon: 'error',
+                                        confirmButtonText: 'OK'
+                                    });
+                                }
+                            },
+                            error: function (xhr) {
+                                Swal.fire({
+                                    title: 'Lỗi!',
+                                    text: 'Có lỗi xảy ra khi kết nối đến server',
+                                    icon: 'error',
+                                    confirmButtonText: 'OK'
+                                });
+                            }
+                        });
+                    }
+                });
+            });
+        });
+
+        function updateTimeRemaining() {
+            var now = new Date();
+            var startDate = new Date('@Model.StartDate.ToString("yyyy-MM-ddTHH:mm:ss")');
+            var endDate = new Date('@Model.EndDate.ToString("yyyy-MM-ddTHH:mm:ss")');
+            var timeRemainingElement = $('#timeRemaining');
+
+            if (now < startDate) {
+                var diff = startDate - now;
+                var days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                var hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                timeRemainingElement.html('<span class="text-warning">Còn ' + days + ' ngày ' + hours + ' giờ để bắt đầu</span>');
+            } else if (now >= startDate && now <= endDate) {
+                var diff = endDate - now;
+                var days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                var hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                timeRemainingElement.html('<span class="text-success">Còn ' + days + ' ngày ' + hours + ' giờ</span>');
+            } else {
+                timeRemainingElement.html('<span class="text-danger">Đã hết hạn</span>');
+            }
+        }
+
+        function calculateSample() {
+            var orderValue = parseFloat($('#orderValue').val()) || 0;
+            var discountPercent = @Model.DiscountPercent;
+            var maxDiscount = @Model.MaxDiscount;
+            var minOrderAmount = @Model.MinOrderAmount;
+
+            if (orderValue === 0) {
+                $('#conditionCheck').text('-');
+                $('#discountAmount').text('0 VND');
+                $('#finalAmount').text('0 VND');
+                return;
+            }
+
+            if (orderValue < minOrderAmount) {
+                $('#conditionCheck').html('<span class="text-danger">Không đủ điều kiện</span>');
+                $('#discountAmount').text('0 VND');
+                $('#finalAmount').text(orderValue.toLocaleString('vi-VN') + ' VND');
+                return;
+            }
+
+            $('#conditionCheck').html('<span class="text-success">Đủ điều kiện</span>');
+
+            var discountAmount = orderValue * (discountPercent / 100);
+            if (discountAmount > maxDiscount) {
+                discountAmount = maxDiscount;
+            }
+
+            var finalAmount = orderValue - discountAmount;
+
+            $('#discountAmount').text(discountAmount.toLocaleString('vi-VN') + ' VND');
+            $('#finalAmount').text(finalAmount.toLocaleString('vi-VN') + ' VND');
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(function() {
+                Swal.fire({
+                    title: 'Thành công!',
+                    text: 'Đã sao chép mã giảm giá: ' + text,
+                    icon: 'success',
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+            });
+        }
+
+        function generateQRCode() {
+            // Thực hiện tạo mã QR
+            Swal.fire({
+                title: 'Tạo mã QR',
+                text: 'Tính năng đang được phát triển...',
+                icon: 'info',
+                confirmButtonText: 'OK'
+            });
+        }
+
+        function copyVoucherLink() {
+            var link = window.location.origin + '@Url.Action("ApplyVoucher", "Home", new { code = Model.Code })';
+            navigator.clipboard.writeText(link).then(function() {
+                Swal.fire({
+                    title: 'Thành công!',
+                    text: 'Đã sao chép liên kết áp dụng mã giảm giá',
+                    icon: 'success',
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+            });
+        }
+
+        function exportVoucherInfo() {
+            // Thực hiện xuất thông tin
+            Swal.fire({
+                title: 'Xuất thông tin',
+                text: 'Tính năng đang được phát triển...',
+                icon: 'info',
+                confirmButtonText: 'OK'
+            });
+        }
+    </script>
+
+    <style>
+        .info-group {
+            border-bottom: 1px solid #eee;
+            padding-bottom: 0.5rem;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #6c757d;
+            margin-bottom: 0.25rem;
+            display: block;
+        }
+
+        .info-value {
+            font-size: 1.1rem;
+        }
+
+        .stat-item {
+            padding: 1rem;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: #6c757d;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+            .info-item:last-child {
+                border-bottom: none;
+            }
+
+            .info-item label {
+                font-weight: 600;
+                margin-bottom: 0;
+            }
+    </style>
+}

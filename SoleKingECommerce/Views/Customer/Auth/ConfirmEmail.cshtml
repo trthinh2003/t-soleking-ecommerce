@@ -1,0 +1,57 @@
+﻿@{
+    ViewData["Title"] = "Xác nhận email";
+    ViewData["SubTitle"] = "Email của bạn đã được xác nhận thành công";
+    Layout = "_CustomerAuthLayout";
+}
+
+<div class="auth-container">
+    <div class="auth-content">
+        <div class="auth-header">
+            <h1 class="auth-title">@ViewData["Title"]</h1>
+            <p class="auth-subtitle">@ViewData["SubTitle"]</p>
+        </div>
+
+        <div class="auth-body text-center">
+            <div class="success-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="#28a745" viewBox="0 0 16 16">
+                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+                </svg>
+            </div>
+
+            <div class="success-message mt-4">
+                <p>Cảm ơn bạn đã xác nhận địa chỉ email. Tài khoản của bạn đã được kích hoạt.</p>
+                <p>Bây giờ bạn có thể đăng nhập và sử dụng tất cả các tính năng của hệ thống.</p>
+            </div>
+
+            <div class="auth-links mt-4">
+                <a asp-action="Login" class="btn btn-primary">Đăng nhập ngay</a>
+                <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary ml-2">Về trang chủ</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .success-icon {
+        margin: 0 auto;
+        width: 80px;
+        height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #e8f5e9;
+        border-radius: 50%;
+    }
+
+    .success-message {
+        color: #4caf50;
+        font-size: 1.1rem;
+    }
+
+    .auth-body {
+        padding: 2rem;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+</style>

@@ -1,5 +1,52 @@
 [
   {
+    "ContainingType": "SoleKingECommerce.Controllers.Api.AddressController",
+    "Method": "GetDistricts",
+    "RelativePath": "api/Address/districts/{provinceId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "provinceId",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SoleKingECommerce.Controllers.Api.AddressController",
+    "Method": "GetProvinces",
+    "RelativePath": "api/Address/provinces",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SoleKingECommerce.Controllers.Api.AddressController",
+    "Method": "GetWards",
+    "RelativePath": "api/Address/wards/{provinceId}/{districtId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "provinceId",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "districtId",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "SoleKingECommerce.Controllers.Api.AuthController",
     "Method": "Login",
     "RelativePath": "api/Auth/login",
