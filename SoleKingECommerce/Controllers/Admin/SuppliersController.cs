@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SoleKingECommerce.Services.Implementations;
 using SoleKingECommerce.Services.Interfaces;
 using SoleKingECommerce.ViewModels.Category;
@@ -6,6 +7,7 @@ using SoleKingECommerce.ViewModels.Supplier;
 
 namespace SoleKingECommerce.Controllers.Admin
 {
+    [Authorize(Roles = "Admin")]
     [Route("admin/[controller]/[action]")]
     public class SuppliersController : Controller
     {

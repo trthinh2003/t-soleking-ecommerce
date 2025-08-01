@@ -1,11 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using SoleKingECommerce.ViewModels.Import;
-using SoleKingECommerce.Services.Interfaces;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using SoleKingECommerce.Models;
+using SoleKingECommerce.Services.Interfaces;
+using SoleKingECommerce.ViewModels.Import;
 
 namespace SoleKingECommerce.Controllers.Admin
 {
+    [Authorize(Roles = "Admin")]
     [Route("admin/[controller]/[action]")]
     public class ImportsController : Controller
     {

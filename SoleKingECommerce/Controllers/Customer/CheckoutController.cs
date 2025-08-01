@@ -1,4 +1,5 @@
 ﻿// CheckoutController.cs - Updated
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SoleKingECommerce.Models;
 using SoleKingECommerce.Services.Interfaces;
@@ -9,6 +10,7 @@ using System.Security.Claims;
 
 namespace SoleKingECommerce.Controllers.Customer
 {
+    [Authorize(Roles = "Admin,Client")]
     public class CheckoutController : Controller
     {
         private readonly ICartService _cartService;

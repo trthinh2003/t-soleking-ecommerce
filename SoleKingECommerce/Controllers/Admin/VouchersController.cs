@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SoleKingECommerce.Services.Interfaces;
 using SoleKingECommerce.ViewModels.Voucher;
 
 namespace SoleKingECommerce.Controllers.Admin
 {
+    [Authorize(Roles = "Admin")]
     [Route("admin/[controller]/[action]")]
     public class VouchersController : Controller
     {

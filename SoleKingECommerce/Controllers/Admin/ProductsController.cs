@@ -1,14 +1,14 @@
-﻿// Controllers/Admin/ProductsController.cs
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using SoleKingECommerce.Helpers;
 using SoleKingECommerce.Models;
 using SoleKingECommerce.Services.Interfaces;
 using SoleKingECommerce.ViewModels.Product;
-using SoleKingECommerce.Helpers;
 
 namespace SoleKingECommerce.Controllers.Admin
 {
-    //[Area("Admin")]
+    [Authorize(Roles = "Admin")]
     [Route("admin/[controller]/[action]")]
     public class ProductsController : Controller
     {
